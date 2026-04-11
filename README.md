@@ -1,4 +1,4 @@
-# Proyecto: Sistema de Control de Inventario y Trazabilidad de Activos
+# Proyecto : Stockly - Sistema de Gestión de Activos (Asset Management System)
 
 ## 1. Contexto del Proyecto
 Una empresa dedicada a la organización de eventos requiere una **solución integral (Full Stack)** para gestionar el ciclo de vida de sus activos. El objetivo principal es centralizar el control de stock y conocer el estado físico y logístico de cada ítem en tiempo real.
@@ -32,12 +32,12 @@ Desarrollar una aplicación que permita al cliente monitorear el inventario a tr
 
 ## 4. Especificaciones del Requerimiento
 
-#### A. Capa de Backend (Lógica y Persistencia)
+#### a. _Capa de Backend_ (Lógica y Persistencia)
 * **Gestión de Estados:** Implementar un sistema de trazabilidad: *En Depósito, Alquilado, En Uso y Baja/Roto*.
 * **Modelado de Datos:** Categorización por tipos (mobiliario, iluminación, sonido) y registro histórico de incidencias.
 * **API de Reportes:** Endpoints de cálculo en tiempo real para métricas y KPIs.
 
-#### B. Capa de Frontend (Dashboard y Visualización)
+#### b. _Capa de Frontend_ (Dashboard y Visualización)
 * **Panel de Control:** Indicadores visuales de stock total vs. activos fuera de depósito.
 * **Vistas de Inventario:** Tablas dinámicas con filtros por Tipo y Estado.
 * **Interfaz de Gestión:** Formularios para actualización rápida de estados por lotes.
@@ -53,7 +53,8 @@ Desarrollar una aplicación que permita al cliente monitorear el inventario a tr
 ```text
 ├── /backend    # Node.js/TS API
 ├── /frontend   # Vite/Angular UI
-├── docker-compose.yml
+├── /docs
+├── docker-compose.yml # Orquestador
 └── README.md
 ```
 
