@@ -58,10 +58,11 @@ Desarrollar una aplicación que permita al cliente monitorear el inventario a tr
 └── README.md
 ```
 
-### Requisitos Previos
-* Node.js (v18+)
-* TypeScript
-* PostgreSQL
-* pnpm (Gestor de paquetes recomendado)
-* Docker desktop
-* Docker compose
+## Requisitos Previos
+
+```
+node -v          # Debe ser >= v18
+pnpm -v          # Debe ser >= v8
+docker --version # Debe ser >= v24 (Docker Desktop 4.10+)
+docker-compose -v # Debe ser >= v2.20
+```
