@@ -1,37 +1,47 @@
-## 1. Descripción del Proyecto
-Solución Full Stack para la gestión del ciclo de vida de activos en empresas de eventos. El sistema centraliza el control de existencias y permite el monitoreo logístico de unidades en tiempo real mediante un sistema de estados operativos.
+# Sistema de Control de Inventario y Trazabilidad de Activos
 
-## 2. Especificaciones Técnicas
+## 📝 Descripción del Proyecto
+Solución **Full Stack** integral diseñada para la gestión del ciclo de vida de activos en empresas de organización de eventos. El sistema permite centralizar el control de existencias y monitorear la logística de cada unidad en tiempo real mediante un flujo dinámico de estados operativos.
+
+El objetivo es transformar la gestión de inventario en información estratégica, facilitando la toma de decisiones mediante visualizaciones ejecutivas del estado físico y logístico de los equipos.
+
+---
+
+## 🛠️ Especificaciones Técnicas
 
 ### Backend (Lógica y Persistencia)
-* **Gestión de Estados:** Implementación de transiciones de estado obligatorias:
-    * En Depósito (Disponible)
-    * Alquilado
-    * En Uso (Evento Activo)
-    * Baja / Roto
-* **Modelado de Datos:** Clasificación por tipos (Mobiliario, Iluminación, Sonido) y registro de incidencias técnicas.
-* **API de Reportes:** Endpoints de cálculo de stock en tiempo real para métricas ejecutivas.
+* **Gestión de Estados:** Implementación de un sistema de trazabilidad con transiciones obligatorias:
+    * `En Depósito` (Disponible)
+    * `Alquilado`
+    * `En Uso` (Evento Activo)
+    * `Baja / Roto`
+* **Modelado de Datos:** Estructura que soporta la categorización por tipos (Mobiliario, Iluminación, Sonido, etc.) y un registro histórico de daños o incidencias.
+* **API de Reportes:** Endpoints desarrollados para el cálculo de existencias en tiempo real que alimentan las métricas del sistema.
 
-### Frontend (Visualización y Gestión)
-* **Dashboard:** Indicadores clave de rendimiento (KPIs) sobre el volumen de stock total frente a activos externos.
-* **Administración:** Tablas dinámicas con filtrado por tipo y estado de activo.
-* **Operativa:** Formularios de actualización de estado para cambios masivos y trazabilidad de lotes.
+### Frontend (Dashboard y Visualización)
+* **Panel de Control (Dashboard):** Interfaz intuitiva con indicadores clave (KPIs) que muestran el volumen total de stock frente a los activos externos.
+* **Vistas de Inventario:** Tablas dinámicas con filtros por tipo de activo y estado, permitiendo identificar rápidamente equipos disponibles o en reparación.
+* **Interfaz de Gestión:** Formularios optimizados para la actualización rápida de estados y gestión de lotes.
 
-## 3. Reglas de Negocio y Criterios de Aceptación
-* **Sincronización:** Actualización automática del panel de control ante cambios en la base de datos.
-* **Restricciones de Disponibilidad:** Los activos bajo el estado "Roto" o "Alquilado" quedan automáticamente excluidos de la disponibilidad para nuevos eventos.
+---
 
-## 4. Estructura del Repositorio
-* `/backend`: Servidor de API, lógica de negocio y acceso a datos (Node.js/TS).
-* `/frontend`: Interfaz de usuario y componentes de visualización (Vite/Angular).
+## ⚖️ Reglas de Negocio y Criterios de Aceptación
+* **Sincronización:** Actualización automática de los indicadores del dashboard ante cualquier cambio de estado en la base de datos.
+* **Restricciones de Disponibilidad:** Los activos marcados como `Roto` o `Alquilado` quedan automáticamente excluidos de la disponibilidad para nuevos eventos.
+* **Segmentación:** El sistema garantiza una visualización filtrada para una gestión operativa más ágil.
 
-## 5. Instrucciones de Implementación
+---
+
+## 📂 Estructura del Repositorio
+```text
+├── /backend    # Node.js/TS API
+├── /frontend   # Vite/Angular UI
+├── docker-compose.yml
+└── README.md
+```
 
 ### Requisitos Previos
 * Node.js (v18+)
 * pnpm (Gestor de paquetes recomendado)
-
-### Configuración del Entorno
-1. Clonar repositorio: `git clone [URL_DEL_REPO]`
-2. Instalación de dependencias (en `/backend` y `/frontend`): `pnpm install`
-3. Ejecución en modo desarrollo: `pnpm dev`
+* Docker desktop
+* Docker compose
