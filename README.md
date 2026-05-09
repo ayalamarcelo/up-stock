@@ -1,6 +1,6 @@
-# Estructura de los Endpoints
+<h1>Estructura de los Endpoints</h1>
 
-## Usuarios
+<h2>Usuarios</h2>
 
 ### _*1. Users Endpoint (/users)*_
 
