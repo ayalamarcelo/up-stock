@@ -6,11 +6,18 @@ builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
+
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
+    {
+        app.MapOpenApi(); // Esto genera el JSON en /openapi/v1.json
+        app.UseSwaggerUI(options =>
+        {
+            // Le indicamos a SwaggerUI dónde está el archivo JSON que genera .NET 9
+            options.SwaggerEndpoint("/openapi/v1.json", "v1");
+        });
+    }
 
 app.UseHttpsRedirection();
 
@@ -39,3 +46,4 @@ record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
 {
     public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
 }
+
