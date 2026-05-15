@@ -1,49 +1,70 @@
-var builder = WebApplication.CreateBuilder(args);
+using Microsoft.OpenApi.Models; // Importa herramientas de Swagger-OpenAPI.
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+var builder = WebApplication.CreateBuilder(args); // Crea la aplicación backend
 
-var app = builder.Build();
+// Agrega servicios al proyecto (detecte endpoints.)
+builder.Services.AddEndpointsApiExplorer();
 
-
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+// Configuración de Swagger
+builder.Services.AddSwaggerGen(opciones =>
+{
+    opciones.SwaggerDoc("v1", new OpenApiInfo
     {
-        app.MapOpenApi(); // Esto genera el JSON en /openapi/v1.json
-        app.UseSwaggerUI(options =>
-        {
-            // Le indicamos a SwaggerUI dónde está el archivo JSON que genera .NET 9
-            options.SwaggerEndpoint("/openapi/v1.json", "v1");
-        });
-    }
+        Title = "API UpStock",
+        Version = "v1",
+        Description = "Documentación de la API del sistema de gestión de activos"
+    });
+});
 
-app.UseHttpsRedirection();
+var app = builder.Build(); // Construye/inicia la app.
 
-var summaries = new[]
+// Activa Swagger / Interfaz Visual
+if (app.Environment.IsDevelopment())
 {
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+    app.UseSwagger(); // AS
 
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
-
-app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+    app.UseSwaggerUI(opciones => // IV
+    {
+        opciones.SwaggerEndpoint("/swagger/v1/swagger.json", "API UpStock v1");
+    });
 }
 
+app.UseHttpsRedirection(); // Fuerza HTTPS seguro.
+
+// Endpoint de ejemplo
+app.MapGet("/users/{id}", (int id) =>
+{
+    return new
+    {
+        Id = id,
+        Nombre = "Usuario de ejemplo"
+    };
+})
+.WithName("GetUserById");
+
+
+app.MapGet("/assets", () =>
+{
+    return new[]
+    {
+        new
+        {
+            Id = 1,
+            Nombre = "Parlante JBL",
+            Estado = "Disponible"
+        }
+    };
+})
+.WithName("GetAssets");
+
+
+app.MapPost("/rentals", () =>
+{
+    return Results.Created("/rentals/1", new
+    {
+        Mensaje = "Alquiler creado correctamente"
+    });
+})
+.WithName("CreateRental");
+
+app.Run(); // Ejecuta el backend
