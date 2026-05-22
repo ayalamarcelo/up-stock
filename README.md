@@ -51,6 +51,9 @@ Cuerpo de la petición (payload)
 
 
 ## Correr proyecto
+cd backend
 dotnet restore
-dotnet ef database update
+dotnet ef database update --framework net9.0 // Eligen la versión que tienen o solo sigan al comando siguiente y te deja elegir
 dotnet run
+corren el puerto, está en el backend http: 
+http://localhost:5102/swagger
