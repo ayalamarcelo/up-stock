@@ -1,70 +1,28 @@
-using Microsoft.OpenApi.Models; // Importa herramientas de Swagger-OpenAPI.
+using Microsoft.EntityFrameworkCore;
+using UpStock.Data;
 
-var builder = WebApplication.CreateBuilder(args); // Crea la aplicación backend
+var builder = WebApplication.CreateBuilder(args);
 
-// Agrega servicios al proyecto (detecte endpoints.)
+// Agregar servicios de Controladores y EF Core
+builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
-// Configuración de Swagger
-builder.Services.AddSwaggerGen(opciones =>
-{
-    opciones.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Title = "API UpStock",
-        Version = "v1",
-        Description = "Documentación de la API del sistema de gestión de activos"
-    });
-});
+// Registra el DbContext con la cadena de conexión
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-var app = builder.Build(); // Construye/inicia la app.
+var app = builder.Build();
 
-// Activa Swagger / Interfaz Visual
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger(); // AS
-
-    app.UseSwaggerUI(opciones => // IV
-    {
-        opciones.SwaggerEndpoint("/swagger/v1/swagger.json", "API UpStock v1");
-    });
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection(); // Fuerza HTTPS seguro.
+app.UseHttpsRedirection();
 
-// Endpoint de ejemplo
-app.MapGet("/users/{id}", (int id) =>
-{
-    return new
-    {
-        Id = id,
-        Nombre = "Usuario de ejemplo"
-    };
-})
-.WithName("GetUserById");
+// Mapea controladores
+app.MapControllers();
 
-
-app.MapGet("/assets", () =>
-{
-    return new[]
-    {
-        new
-        {
-            Id = 1,
-            Nombre = "Parlante JBL",
-            Estado = "Disponible"
-        }
-    };
-})
-.WithName("GetAssets");
-
-
-app.MapPost("/rentals", () =>
-{
-    return Results.Created("/rentals/1", new
-    {
-        Mensaje = "Alquiler creado correctamente"
-    });
-})
-.WithName("CreateRental");
-
-app.Run(); // Ejecuta el backend
+app.Run();

@@ -49,3 +49,8 @@ Cuerpo de la petición (payload)
 3. Guardar la relación en una tabla o array de `rentals`.
 4. Devolver un `201` con los detalles del movimiento.
 
+
+## Correr proyecto
+dotnet restore
+dotnet ef database update
+dotnet run
