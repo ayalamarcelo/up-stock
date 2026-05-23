@@ -1,8 +1,16 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace UpStock.Models;
 
 public class Asset
 {
-    public int Id { get; set; }
-    public string Nombre { get; set; } = string.Empty;
-    public string Estado { get; set; } = "Disponible";
+    [Key]
+    public Guid AssetID { get; set; } // Guid es el equivalente a uuid de postgre en c#
+    
+    public Guid CategoryID { get; set; }
+    public Guid StatusID { get; set; }
+    
+    public string Name { get; set; } = string.Empty;
+    public string CodeID { get; set; } = string.Empty;
+    public bool IsDeleted { get; set; } = false;
 }
