@@ -1,4 +1,6 @@
-<h1>Estructura de los Endpoints</h1>
+<h1 align="center">Estructura de los Endpoints</h1>
+
+<br>
 
 <h2>Usuarios</h2>
 
@@ -13,6 +15,9 @@
 |  PUT     | /users/:id  | Actualizar la información de un usuario |
 |  DELETE  | /users/:id  | Eliminar un usuario por id              |
 
+<br>
+
+#
 
 ### _*2. Assets Endpoint (/assets o items)*_
 
@@ -25,6 +30,9 @@
 |  PUT     | /users/:id  | Actualizar información                  |
 |  DELETE  | /users/:id  | Eliminar un item o activo del sistema   |
 
+<br>
+
+#
 
 ### _*3. Rentals Endpoints (/rentals o /rent)*_
 
@@ -49,11 +57,12 @@ Cuerpo de la petición (payload)
 3. Guardar la relación en una tabla o array de `rentals`.
 4. Devolver un `201` con los detalles del movimiento.
 
+<br>
 
 ## Correr proyecto
-cd backend
-dotnet restore
-dotnet ef database update --framework net9.0 // Eligen la versión que tienen o solo sigan al comando siguiente y te deja elegir
-dotnet run
-corren el puerto, está en el backend http: 
-http://localhost:5102/swagger
+
+1. `cd backend`
+2. `dotnet restore`
+3. `dotnet run`
+4. `dotnet ef database update --framework net9.0` | Solo si el paso 3. no les funciona, eligen la versión de .NET que tienen
+5. corren este puerto, está en el backend http: `http://localhost:5102/swagger`
