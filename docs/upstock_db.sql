@@ -34,7 +34,7 @@ CREATE TABLE assets (
     statusID UUID NOT NULL,
     name VARCHAR(150) NOT NULL,
     codeID VARCHAR(100) NOT NULL UNIQUE,
-    isActive BOOLEAN NOT NULL DEFAULT TRUE,
+    isDeleted BOOLEAN NOT NULL DEFAULT FALSE,
     CONSTRAINT fk_assets_category FOREIGN KEY (categoryID) REFERENCES category(categoryID) ON DELETE RESTRICT,
     CONSTRAINT fk_assets_status FOREIGN KEY (statusID) REFERENCES status(statusID) ON DELETE RESTRICT
 );
