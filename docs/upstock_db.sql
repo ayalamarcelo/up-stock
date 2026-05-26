@@ -16,14 +16,16 @@ CREATE TABLE users (
     name VARCHAR(150) NOT NULL,
     email VARCHAR(150) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
-    rol VARCHAR(50) NOT NULL
+    rol VARCHAR(50) NOT NULL,
+    isActive BOOLEAN NOT NULL DEFAULT TRUE
 );
 
 CREATE TABLE clients (
     clientID UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     name VARCHAR(150) NOT NULL,
     dniCuit VARCHAR(50) NOT NULL UNIQUE,
-    phone VARCHAR(50)
+    phone VARCHAR(50),
+    isActive BOOLEAN NOT NULL DEFAULT TRUE
 );
 
 CREATE TABLE assets (
@@ -32,6 +34,7 @@ CREATE TABLE assets (
     statusID UUID NOT NULL,
     name VARCHAR(150) NOT NULL,
     codeID VARCHAR(100) NOT NULL UNIQUE,
+    isActive BOOLEAN NOT NULL DEFAULT TRUE,
     CONSTRAINT fk_assets_category FOREIGN KEY (categoryID) REFERENCES category(categoryID) ON DELETE RESTRICT,
     CONSTRAINT fk_assets_status FOREIGN KEY (statusID) REFERENCES status(statusID) ON DELETE RESTRICT
 );
