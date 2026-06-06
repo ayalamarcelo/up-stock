@@ -1,6 +1,6 @@
-using Microsoft.EntityFrameworkCore;
 using UpStock.Data;
 using UpStock.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace UpStock.Services;
 
@@ -8,20 +8,62 @@ public class AssetService : IAssetService
 {
     private readonly AppDbContext _context;
 
-    public AssetService(AppDbContext context) => _context = context;
+    public AssetService(AppDbContext context)
+    {
+        _context = context;
+    }
 
-    public async Task<IEnumerable<Asset>> GetAllAssetsAsync()
+    public async Task<IEnumerable<Asset>> GetAllAsync()
     {
         return await _context.Assets.ToListAsync();
     }
 
-    public async Task<Asset?> AddAssetAsync(Asset asset)
+    public async Task<Asset?> GetByIdAsync(Guid id)
     {
-        // Aquí podrías agregar reglas de negocio, ej:
-        // if (string.IsNullOrEmpty(asset.Nombre)) return null;
-        
+        return await _context.Assets.FindAsync(id);
+    }
+
+    public async Task<Asset> CreateAsync(Asset asset)
+    {
+        asset.assetid = Guid.NewGuid();
+        asset.isdeleted = false;
         _context.Assets.Add(asset);
         await _context.SaveChangesAsync();
         return asset;
+    }
+
+    public async Task<bool> UpdateAsync(Guid id, Asset asset)
+    {
+        if (id != asset.assetid) return false;
+
+        _context.Entry(asset).State = EntityState.Modified;
+
+        try
+        {
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!await AssetExists(id)) return false;
+            throw;
+        }
+    }
+
+    public async Task<bool> DeleteAsync(Guid id)
+    {
+        var asset = await _context.Assets.FindAsync(id);
+        if (asset == null) return false;
+
+        asset.isdeleted = true;
+        _context.Entry(asset).State = EntityState.Modified;
+
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
+    private async Task<bool> AssetExists(Guid id)
+    {
+        return await _context.Assets.AnyAsync(e => e.assetid == id);
     }
 }
