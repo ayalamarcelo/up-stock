@@ -4,6 +4,9 @@ namespace UpStock.Services;
 
 public interface IAssetService
 {
-    Task<IEnumerable<Asset>> GetAllAssetsAsync();
-    Task<Asset?> AddAssetAsync(Asset asset);
+    Task<IEnumerable<Asset>> GetAllAsync();
+    Task<Asset?> GetByIdAsync(Guid id);
+    Task<Asset> CreateAsync(Asset asset);
+    Task<bool> UpdateAsync(Guid id, Asset asset);
+    Task<bool> DeleteAsync(Guid id);
 }

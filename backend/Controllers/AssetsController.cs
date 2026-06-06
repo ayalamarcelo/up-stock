@@ -1,151 +1,149 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using UpStock.Data;
 using UpStock.Models;
+using UpStock.Services;
+using Microsoft.AspNetCore.Mvc;
 
 namespace UpStock.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class AssetsController : ControllerBase
+public class AssetController : ControllerBase
 {
-    private readonly AppDbContext _context;
+    private readonly IAssetService _assetService;
 
-    public AssetsController(AppDbContext context) => _context = context;
+    public AssetController(IAssetService service)
+    {
+        _assetService = service;
+    }
 
-    // GET: api/Assets
+    // GET: api/Asset
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Asset>>> GetAssets()
     {
         try
         {
-            var assets = await _context.Assets.Where(a => !a.IsDeleted).ToListAsync();
+            var assets = await _assetService.GetAllAsync();
 
             if (!assets.Any())
-                return NotFound("No hay activos registrados en el sistema.");
+                return NotFound(new { message = "No hay activos registrados en el sistema." });
 
             return Ok(assets);
         }
         catch (Exception ex)
         {
-            return StatusCode(500, $"Error interno del servidor: {ex.Message}");
+            return StatusCode(500, new { message = $"Error interno del servidor: {ex.Message}" });
         }
     }
 
-    // GET: api/Assets/5
+    // GET: api/Asset/{id}
     [HttpGet("{id}")]
     public async Task<ActionResult<Asset>> GetAsset(Guid id)
     {
         try
         {
             if (id == Guid.Empty)
-                return BadRequest("El ID proporcionado no es válido.");
+                return BadRequest(new { message = "El ID proporcionado no es válido." });
 
-            var asset = await _context.Assets.FirstOrDefaultAsync(a => a.AssetID == id && !a.IsDeleted);
+            var asset = await _assetService.GetByIdAsync(id);
 
             if (asset == null)
-                return NotFound($"No se encontró ningún activo con el ID {id}.");
+                return NotFound(new { message = $"No se encontró ningún activo con el ID {id}." });
 
             return Ok(asset);
         }
         catch (Exception ex)
         {
-            return StatusCode(500, $"Error interno del servidor: {ex.Message}");
+            return StatusCode(500, new { message = $"Error interno del servidor: {ex.Message}" });
         }
     }
 
-    // POST: api/Assets
+    // POST: api/Asset
     [HttpPost]
-    public async Task<ActionResult<Asset>> CreateAsset(Asset asset)
+    public async Task<ActionResult<Asset>> PostAsset(Asset asset)
     {
         try
         {
             if (asset == null)
-                return BadRequest("El cuerpo de la solicitud no puede estar vacío.");
+                return BadRequest(new { message = "El cuerpo de la solicitud no puede estar vacío." });
 
-            if (string.IsNullOrWhiteSpace(asset.Name))
-                return BadRequest("El nombre del activo es obligatorio.");
+            if (string.IsNullOrWhiteSpace(asset.name))
+                return BadRequest(new { message = "El nombre del activo es obligatorio." });
 
-            if (string.IsNullOrWhiteSpace(asset.CodeID))
-                return BadRequest("El código del activo es obligatorio.");
+            if (string.IsNullOrWhiteSpace(asset.codeid))
+                return BadRequest(new { message = "El código del activo es obligatorio." });
 
-            var existe = await _context.Assets.AnyAsync(a => a.CodeID == asset.CodeID && !a.IsDeleted);
-            if (existe)
-                return Conflict($"Ya existe un activo con el código '{asset.CodeID}'.");
+            if (asset.categoryid == Guid.Empty)
+                return BadRequest(new { message = "La categoría del activo es obligatoria." });
 
-            asset.AssetID = Guid.NewGuid();
-            asset.IsDeleted = false;
+            if (asset.statusid == Guid.Empty)
+                return BadRequest(new { message = "El estado del activo es obligatorio." });
 
-            _context.Assets.Add(asset);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction(nameof(GetAsset), new { id = asset.AssetID }, asset);
+            var createdAsset = await _assetService.CreateAsync(asset);
+            return CreatedAtAction(nameof(GetAsset), new { id = createdAsset.assetid }, createdAsset);
         }
         catch (Exception ex)
         {
-            return StatusCode(500, $"Error interno del servidor: {ex.Message}");
+            return StatusCode(500, new { message = $"Error interno del servidor: {ex.Message}" });
         }
     }
 
-    // PUT: api/Assets/5
+    // PUT: api/Asset/{id}
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateAsset(Guid id, Asset asset)
+    public async Task<IActionResult> PutAsset(Guid id, Asset asset)
     {
         try
         {
             if (id == Guid.Empty)
-                return BadRequest("El ID proporcionado no es válido.");
+                return BadRequest(new { message = "El ID proporcionado no es válido." });
 
-            if (id != asset.AssetID)
-                return BadRequest("El ID de la URL no coincide con el ID del cuerpo de la solicitud.");
+            if (id != asset.assetid)
+                return BadRequest(new { message = "El ID de la URL no coincide con el ID del cuerpo de la solicitud." });
 
-            if (string.IsNullOrWhiteSpace(asset.Name))
-                return BadRequest("El nombre del activo es obligatorio.");
+            if (string.IsNullOrWhiteSpace(asset.name))
+                return BadRequest(new { message = "El nombre del activo es obligatorio." });
 
-            if (string.IsNullOrWhiteSpace(asset.CodeID))
-                return BadRequest("El código del activo es obligatorio.");
+            if (string.IsNullOrWhiteSpace(asset.codeid))
+                return BadRequest(new { message = "El código del activo es obligatorio." });
 
-            var existe = await _context.Assets.AnyAsync(a => a.AssetID == id && !a.IsDeleted);
-            if (!existe)
-                return NotFound($"No se encontró ningún activo con el ID {id}.");
+            var existeAsset = await _assetService.GetByIdAsync(id);
+            if (existeAsset == null)
+                return NotFound(new { message = $"No se encontró ningún activo con el ID {id}." });
 
-            var codigoDuplicado = await _context.Assets.AnyAsync(a => a.CodeID == asset.CodeID && a.AssetID != id && !a.IsDeleted);
-            if (codigoDuplicado)
-                return Conflict($"Ya existe otro activo con el código '{asset.CodeID}'.");
+            var result = await _assetService.UpdateAsync(id, asset);
 
-            _context.Entry(asset).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
+            if (!result)
+                return BadRequest(new { message = "Error al actualizar el activo." });
 
             return NoContent();
         }
         catch (Exception ex)
         {
-            return StatusCode(500, $"Error interno del servidor: {ex.Message}");
+            return StatusCode(500, new { message = $"Error interno del servidor: {ex.Message}" });
         }
     }
 
-    // DELETE: api/Assets/5 (Soft Delete)
+    // DELETE: api/Asset/{id}
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteAsset(Guid id)
     {
         try
         {
             if (id == Guid.Empty)
-                return BadRequest("El ID proporcionado no es válido.");
+                return BadRequest(new { message = "El ID proporcionado no es válido." });
 
-            var asset = await _context.Assets.FindAsync(id);
+            var existeAsset = await _assetService.GetByIdAsync(id);
+            if (existeAsset == null)
+                return NotFound(new { message = $"No se encontró ningún activo con el ID {id}." });
 
-            if (asset == null || asset.IsDeleted)
-                return NotFound($"No se encontró ningún activo con el ID {id}.");
+            var result = await _assetService.DeleteAsync(id);
 
-            asset.IsDeleted = true;
-            await _context.SaveChangesAsync();
+            if (!result)
+                return NotFound(new { message = "Activo no encontrado." });
 
             return NoContent();
         }
         catch (Exception ex)
         {
-            return StatusCode(500, $"Error interno del servidor: {ex.Message}");
+            return StatusCode(500, new { message = $"Error interno del servidor: {ex.Message}" });
         }
     }
 }
