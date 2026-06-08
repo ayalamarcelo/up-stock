@@ -34,7 +34,7 @@ builder.Services.AddScoped<IStatusService, StatusService>();
 // DESCOMENTAR A MEDIDA QUE SE CREAN LOS ARCHIVOS DE SERVICIOS:
 
 // Para la gestión de Activos principales
- builder.Services.AddScoped<IAssetService, AssetService>();
+builder.Services.AddScoped<IAssetService, AssetService>();
 
 // Para el manejo de Usuarios y Autenticación
 // builder.Services.AddScoped<IUserService, UserService>();
@@ -43,7 +43,7 @@ builder.Services.AddScoped<IStatusService, StatusService>();
 // builder.Services.AddScoped<IClientService, ClientService>();
 
 // Para el núcleo del sistema: Alquileres y contratos
-// builder.Services.AddScoped<IRentalService, RentalService>();
+builder.Services.AddScoped<IRentalService, RentalService>();
 
 // Para los registros de reparaciones y auditoría (Opcionales si llevan servicios separados)
 // builder.Services.AddScoped<IMaintenanceLogService, MaintenanceLogService>();

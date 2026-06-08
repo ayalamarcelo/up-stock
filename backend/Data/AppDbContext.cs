@@ -12,8 +12,8 @@ public class AppDbContext : DbContext
     public DbSet<Client> Clients { get; set; }
     public DbSet<Category> Categories { get; set; }
     public DbSet<Status> Statuses { get; set; }
-
-    // public DbSet<Rental> Rentals { get; set; }
+    public DbSet<Rental> Rentals { get; set; }
+    
     // public DbSet<RentalItem> RentalItems { get; set; }
     // public DbSet<MaintenanceLog> MaintenanceLogs { get; set; }
     // public DbSet<AssetLog> AssetLogs { get; set; }
@@ -29,7 +29,7 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Asset>().Property(a => a.assetid).ValueGeneratedOnAdd();
         modelBuilder.Entity<Status>().Property(s => s.statusid).ValueGeneratedOnAdd();
 
-        // Las demás quedan comentadas para que no de error hasta que hagamos esos modelos:
+        // Las demï¿½s quedan comentadas para que no de error hasta que hagamos esos modelos:
         // modelBuilder.Entity<User>().Property(u => u.userid).ValueGeneratedOnAdd();
         // modelBuilder.Entity<Client>().Property(c => c.clientid).ValueGeneratedOnAdd();
         // modelBuilder.Entity<Category>().Property(c => c.categoryid).ValueGeneratedOnAdd();
