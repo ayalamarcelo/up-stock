@@ -16,6 +16,12 @@
   <a href="https://learn.microsoft.com/es-es/ef/">
     <img src="https://img.shields.io/badge/Entity%20Framework-512BD4?style=for-the-badge&logo=dotnet&logoColor=white">
   </a>
+  <a href="https://www.typescriptlang.org/">
+    <img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white">
+  </a>
+  <a href="https://angular.dev/">
+    <img src="https://img.shields.io/badge/Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white">
+  </a>
 </p>
 
 ## Descripción
