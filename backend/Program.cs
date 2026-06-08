@@ -44,6 +44,7 @@ builder.Services.AddScoped<IAssetService, AssetService>();
 
 // Para el núcleo del sistema: Alquileres y contratos
 builder.Services.AddScoped<IRentalService, RentalService>();
+builder.Services.AddScoped<IRentalItemService, RentalItemService>();
 
 // Para los registros de reparaciones y auditoría (Opcionales si llevan servicios separados)
 // builder.Services.AddScoped<IMaintenanceLogService, MaintenanceLogService>();

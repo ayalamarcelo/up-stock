@@ -13,8 +13,8 @@ public class AppDbContext : DbContext
     public DbSet<Category> Categories { get; set; }
     public DbSet<Status> Statuses { get; set; }
     public DbSet<Rental> Rentals { get; set; }
+    public DbSet<RentalItem> RentalItems { get; set; }
     
-    // public DbSet<RentalItem> RentalItems { get; set; }
     // public DbSet<MaintenanceLog> MaintenanceLogs { get; set; }
     // public DbSet<AssetLog> AssetLogs { get; set; }
 
