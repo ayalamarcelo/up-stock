@@ -1,5 +1,6 @@
 using UpStock.Data;
 using UpStock.Models;
+using UpStock.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace UpStock.Services;

@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using UpStock.Data;
 using UpStock.Models;
+using UpStock.Interfaces;
 
 namespace UpStock.Controllers;
 
@@ -9,9 +8,9 @@ namespace UpStock.Controllers;
 [Route("api/[controller]")]
 public class ClientsController : ControllerBase
 {
-    private readonly AppDbContext _context;
+    private readonly IClientService _clientService;
 
-    public ClientsController(AppDbContext context) => _context = context;
+    public ClientsController(IClientService clientService) => _clientService = clientService;
 
     // GET: api/Clients
     [HttpGet]
@@ -19,7 +18,7 @@ public class ClientsController : ControllerBase
     {
         try
         {
-            var clients = await _context.Clients.Where(c => c.IsActive).ToListAsync();
+            var clients = await _clientService.GetAllAsync();
 
             if (!clients.Any())
                 return NotFound("No hay clientes registrados en el sistema.");
@@ -41,7 +40,7 @@ public class ClientsController : ControllerBase
             if (id == Guid.Empty)
                 return BadRequest("El ID proporcionado no es válido.");
 
-            var client = await _context.Clients.FirstOrDefaultAsync(c => c.ClientID == id && c.IsActive);
+            var client = await _clientService.GetByIdAsync(id);
 
             if (client == null)
                 return NotFound($"No se encontró ningún cliente con el ID {id}.");
@@ -72,17 +71,8 @@ public class ClientsController : ControllerBase
             if (string.IsNullOrWhiteSpace(client.Phone))
                 return BadRequest("El teléfono del cliente es obligatorio.");
 
-            var existe = await _context.Clients.AnyAsync(c => c.DniCuit == client.DniCuit && c.IsActive);
-            if (existe)
-                return Conflict($"Ya existe un cliente con el DNI/CUIT '{client.DniCuit}'.");
-
-            client.ClientID = Guid.NewGuid();
-            client.IsActive = true;
-
-            _context.Clients.Add(client);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction(nameof(GetClient), new { id = client.ClientID }, client);
+            var created = await _clientService.CreateAsync(client);
+            return CreatedAtAction(nameof(GetClient), new { id = created.ClientID }, created);
         }
         catch (Exception ex)
         {
@@ -108,16 +98,9 @@ public class ClientsController : ControllerBase
             if (string.IsNullOrWhiteSpace(client.DniCuit))
                 return BadRequest("El DNI/CUIT del cliente es obligatorio.");
 
-            var existe = await _context.Clients.AnyAsync(c => c.ClientID == id && c.IsActive);
-            if (!existe)
+            var updated = await _clientService.UpdateAsync(id, client);
+            if (!updated)
                 return NotFound($"No se encontró ningún cliente con el ID {id}.");
-
-            var dniDuplicado = await _context.Clients.AnyAsync(c => c.DniCuit == client.DniCuit && c.ClientID != id && c.IsActive);
-            if (dniDuplicado)
-                return Conflict($"Ya existe otro cliente con el DNI/CUIT '{client.DniCuit}'.");
-
-            _context.Entry(client).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
 
             return NoContent();
         }
@@ -136,13 +119,9 @@ public class ClientsController : ControllerBase
             if (id == Guid.Empty)
                 return BadRequest("El ID proporcionado no es válido.");
 
-            var client = await _context.Clients.FirstOrDefaultAsync(c => c.ClientID == id && c.IsActive);
-
-            if (client == null)
+            var deleted = await _clientService.DeleteAsync(id);
+            if (!deleted)
                 return NotFound($"No se encontró ningún cliente con el ID {id}.");
-
-            client.IsActive = false;
-            await _context.SaveChangesAsync();
 
             return NoContent();
         }

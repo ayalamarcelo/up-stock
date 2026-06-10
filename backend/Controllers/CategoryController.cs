@@ -1,5 +1,5 @@
 using UpStock.Models;
-using UpStock.Services;
+using UpStock.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace UpStock.Controllers;

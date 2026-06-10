@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using UpStock.Data;
 using UpStock.Models;
+using UpStock.Interfaces;
 
 namespace UpStock.Controllers;
 
@@ -9,9 +8,9 @@ namespace UpStock.Controllers;
 [Route("api/[controller]")]
 public class UsersController : ControllerBase
 {
-    private readonly AppDbContext _context;
+    private readonly IUserService _userService;
 
-    public UsersController(AppDbContext context) => _context = context;
+    public UsersController(IUserService userService) => _userService = userService;
 
     // GET: api/Users
     [HttpGet]
@@ -19,7 +18,7 @@ public class UsersController : ControllerBase
     {
         try
         {
-            var users = await _context.Users.Where(u => u.IsActive).ToListAsync();
+            var users = await _userService.GetAllAsync();
 
             if (!users.Any())
                 return NotFound("No hay usuarios registrados en el sistema.");
@@ -41,7 +40,7 @@ public class UsersController : ControllerBase
             if (id == Guid.Empty)
                 return BadRequest("El ID proporcionado no es válido.");
 
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserID == id && u.IsActive);
+            var user = await _userService.GetByIdAsync(id);
 
             if (user == null)
                 return NotFound($"No se encontró ningún usuario con el ID {id}.");
@@ -75,17 +74,8 @@ public class UsersController : ControllerBase
             if (string.IsNullOrWhiteSpace(user.Rol))
                 return BadRequest("El rol del usuario es obligatorio.");
 
-            var emailExiste = await _context.Users.AnyAsync(u => u.Email == user.Email && u.IsActive);
-            if (emailExiste)
-                return Conflict($"Ya existe un usuario con el email '{user.Email}'.");
-
-            user.UserID = Guid.NewGuid();
-            user.IsActive = true;
-
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction(nameof(GetUser), new { id = user.UserID }, user);
+            var created = await _userService.CreateAsync(user);
+            return CreatedAtAction(nameof(GetUser), new { id = created.UserID }, created);
         }
         catch (Exception ex)
         {
@@ -114,16 +104,9 @@ public class UsersController : ControllerBase
             if (string.IsNullOrWhiteSpace(user.Rol))
                 return BadRequest("El rol del usuario es obligatorio.");
 
-            var existe = await _context.Users.AnyAsync(u => u.UserID == id && u.IsActive);
-            if (!existe)
+            var updated = await _userService.UpdateAsync(id, user);
+            if (!updated)
                 return NotFound($"No se encontró ningún usuario con el ID {id}.");
-
-            var emailDuplicado = await _context.Users.AnyAsync(u => u.Email == user.Email && u.UserID != id && u.IsActive);
-            if (emailDuplicado)
-                return Conflict($"Ya existe otro usuario con el email '{user.Email}'.");
-
-            _context.Entry(user).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
 
             return NoContent();
         }
@@ -142,13 +125,9 @@ public class UsersController : ControllerBase
             if (id == Guid.Empty)
                 return BadRequest("El ID proporcionado no es válido.");
 
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserID == id && u.IsActive);
-
-            if (user == null)
+            var deleted = await _userService.DeleteAsync(id);
+            if (!deleted)
                 return NotFound($"No se encontró ningún usuario con el ID {id}.");
-
-            user.IsActive = false;
-            await _context.SaveChangesAsync();
 
             return NoContent();
         }
