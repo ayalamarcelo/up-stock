@@ -1,6 +1,6 @@
 using UpStock.Models;
 
-namespace UpStock.Services;
+namespace UpStock.Interfaces;
 
 public interface ICategoryService
 {

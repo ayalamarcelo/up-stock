@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using UpStock.Data;
 using UpStock.Services;
+using UpStock.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,10 +38,10 @@ builder.Services.AddScoped<IStatusService, StatusService>();
 builder.Services.AddScoped<IAssetService, AssetService>();
 
 // Para el manejo de Usuarios y Autenticación
-// builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 // Para la administración de Clientes
-// builder.Services.AddScoped<IClientService, ClientService>();
+builder.Services.AddScoped<IClientService, ClientService>();
 
 // Para el núcleo del sistema: Alquileres y contratos
 builder.Services.AddScoped<IRentalService, RentalService>();
