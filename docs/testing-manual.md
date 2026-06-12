@@ -122,9 +122,7 @@ Observación: El endpoint recibe correctamente la solicitud, pero se produce un 
 
 ### PUT /api/Category/{id}
 
-Resultado obtenido:
-
-404 Not Found
+Resultado obtenido: 404 Not Found
 
 Estado: Correcto.
 
@@ -132,9 +130,7 @@ Observación: El endpoint respondió correctamente indicando que no existe ningu
 
 ### DELETE /api/Category/{id}
 
-Resultado obtenido:
-
-404 Not Found
+Resultado obtenido: 404 Not Found
 
 Estado: Correcto.
 
@@ -196,9 +192,7 @@ Estado: Fallido.
 
 Resultado obtenido: 500 Internal Server Error
 
-Respuesta:
-
-"An error occurred while saving the entity changes."
+Respuesta: "An error occurred while saving the entity changes."
 
 Estado: Fallido.
 
@@ -270,7 +264,7 @@ Observación: El identificador utilizado no fue encontrado en la base de datos.
 
 Resultado obtenido: 500 Internal Server Error
 
-Respuesta: 42P01: no existe la relación "Users"
+Respuesta: '42P01: no existe la relación "Users"'
 
 Estado: Fallido.
 
