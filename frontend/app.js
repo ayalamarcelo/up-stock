@@ -1,4 +1,4 @@
-const API_URL = 'https://localhost:5234/api';
+const API_URL = 'https://localhost:5432/api';
 
 document.addEventListener("DOMContentLoaded", async () => {
     await cargarClientes();
