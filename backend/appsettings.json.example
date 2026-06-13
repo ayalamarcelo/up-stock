@@ -6,7 +6,7 @@
     }
   },
   "ConnectionStrings": {
-    "DefaultConnection": "Host=localhost;Port=5432;Database=upstock_db;Username=tu_usuario;Password=tu_password" //ACA VAN LOS DATOS DE SU PROPIA CONFIGURACION
+    "DefaultConnection": "Host=localhost;Port=5432;Database=upstock_db;Username=username;Password=your_password;"
   },
-  "AllowedHosts": "*"
+  "AllowedHosts": "api.upstock.com;upstock.com"
 }

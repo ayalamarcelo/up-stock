@@ -6,6 +6,7 @@
     }
   },
   "ConnectionStrings": {
-    "DefaultConnection": "Server=(localdb)\\mssqllocaldb;Database=NombreDeTuBD;Trusted_Connection=True;"
-  }
+    "DefaultConnection": "Host=localhost;Port=5432;Database=upstock_db;Username=username;Password=your_password;"
+  },
+  "AllowedHosts": "*"
 }
