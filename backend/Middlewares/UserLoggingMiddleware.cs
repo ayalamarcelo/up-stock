@@ -20,7 +20,8 @@ public class UserLoggingMiddleware
         
         if (context.User.Identity?.IsAuthenticated == true)
         {
-            userEmail = context.User.Identity.Name ?? "Autenticado";
+            var emailClaim = context.User.FindFirst(System.Security.Claims.ClaimTypes.Email);
+            userEmail = emailClaim?.Value ?? context.User.Identity.Name ?? "Autenticado";
         }
         else if (context.Request.Headers.TryGetValue("X-User-Email", out var emailHeader))
         {
