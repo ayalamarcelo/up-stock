@@ -9,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Agregar servicios de Controladores
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 // 1. Configuración de Swagger para "Up Stock"
 builder.Services.AddSwaggerGen(c =>
