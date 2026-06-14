@@ -14,26 +14,25 @@ public class AppDbContext : DbContext
     public DbSet<Status> Statuses { get; set; }
     public DbSet<Rental> Rentals { get; set; }
     public DbSet<RentalItem> RentalItems { get; set; }
-    
-    // public DbSet<MaintenanceLog> MaintenanceLogs { get; set; }
+
     // public DbSet<AssetLog> AssetLogs { get; set; }
+    // public DbSet<MaintenanceLog> MaintenanceLogs { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        // Filtros globales activos
-        modelBuilder.Entity<Asset>().HasQueryFilter(a => !a.isdeleted);
-        // Las de User y Client quedan comentadas hasta que adaptemos sus modelos:
-        // modelBuilder.Entity<User>().HasQueryFilter(u => u.isactive);   
-        // modelBuilder.Entity<Client>().HasQueryFilter(c => c.isactive); 
+        // 1. Filtros globales activos
+        modelBuilder.Entity<Asset>().HasQueryFilter(a => !a.IsDeleted);
+        modelBuilder.Entity<User>().HasQueryFilter(u => u.IsActive);
+        modelBuilder.Entity<Client>().HasQueryFilter(c => c.IsActive);
 
-        modelBuilder.Entity<Asset>().Property(a => a.assetid).ValueGeneratedOnAdd();
-        modelBuilder.Entity<Status>().Property(s => s.statusid).ValueGeneratedOnAdd();
+        // 2. Configuración de IDs Autogenerados
+        modelBuilder.Entity<Asset>().Property(a => a.AssetId).ValueGeneratedOnAdd();
+        modelBuilder.Entity<Status>().Property(s => s.StatusId).ValueGeneratedOnAdd();
+        modelBuilder.Entity<User>().Property(u => u.UserID).ValueGeneratedOnAdd();
+        modelBuilder.Entity<Client>().Property(c => c.ClientID).ValueGeneratedOnAdd();
+        modelBuilder.Entity<Category>().Property(c => c.CategoryID).ValueGeneratedOnAdd();
 
-        // Las dem�s quedan comentadas para que no de error hasta que hagamos esos modelos:
-        // modelBuilder.Entity<User>().Property(u => u.userid).ValueGeneratedOnAdd();
-        // modelBuilder.Entity<Client>().Property(c => c.clientid).ValueGeneratedOnAdd();
-        // modelBuilder.Entity<Category>().Property(c => c.categoryid).ValueGeneratedOnAdd();
-
+    
         base.OnModelCreating(modelBuilder);
     }
 }

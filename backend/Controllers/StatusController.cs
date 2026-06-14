@@ -65,11 +65,11 @@ public class StatusController : ControllerBase
             if (status == null)
                 return BadRequest(new { message = "El cuerpo de la solicitud no puede estar vacío." });
 
-            if (string.IsNullOrWhiteSpace(status.namestatus))
+            if (string.IsNullOrWhiteSpace(status.NameStatus))
                 return BadRequest(new { message = "El nombre del estado es obligatorio." });
 
             var createdStatus = await _statusService.CreateAsync(status);
-            return CreatedAtAction(nameof(GetStatus), new { id = createdStatus.statusid }, createdStatus);
+            return CreatedAtAction(nameof(GetStatus), new { id = createdStatus.StatusId }, createdStatus);
         }
         catch (Exception ex)
         {
@@ -86,10 +86,10 @@ public class StatusController : ControllerBase
             if (id == Guid.Empty)
                 return BadRequest(new { message = "El ID proporcionado no es válido." });
 
-            if (id != status.statusid)
+            if (id != status.StatusId)
                 return BadRequest(new { message = "El ID de la URL no coincide con el ID del cuerpo de la solicitud." });
 
-            if (string.IsNullOrWhiteSpace(status.namestatus))
+            if (string.IsNullOrWhiteSpace(status.NameStatus))
                 return BadRequest(new { message = "El nombre del estado es obligatorio." });
 
             var existe = await _statusService.GetByIdAsync(id);

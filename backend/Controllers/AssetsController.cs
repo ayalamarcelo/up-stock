@@ -65,20 +65,20 @@ public class AssetController : ControllerBase
             if (asset == null)
                 return BadRequest(new { message = "El cuerpo de la solicitud no puede estar vacío." });
 
-            if (string.IsNullOrWhiteSpace(asset.name))
+            if (string.IsNullOrWhiteSpace(asset.Name))
                 return BadRequest(new { message = "El nombre del activo es obligatorio." });
 
-            if (string.IsNullOrWhiteSpace(asset.codeid))
+            if (string.IsNullOrWhiteSpace(asset.CodeId))
                 return BadRequest(new { message = "El código del activo es obligatorio." });
 
-            if (asset.categoryid == Guid.Empty)
+            if (asset.CategoryId == Guid.Empty)
                 return BadRequest(new { message = "La categoría del activo es obligatoria." });
 
-            if (asset.statusid == Guid.Empty)
+            if (asset.StatusId == Guid.Empty)
                 return BadRequest(new { message = "El estado del activo es obligatorio." });
 
             var createdAsset = await _assetService.CreateAsync(asset);
-            return CreatedAtAction(nameof(GetAsset), new { id = createdAsset.assetid }, createdAsset);
+            return CreatedAtAction(nameof(GetAsset), new { id = createdAsset.AssetId }, createdAsset);
         }
         catch (Exception ex)
         {
@@ -95,13 +95,13 @@ public class AssetController : ControllerBase
             if (id == Guid.Empty)
                 return BadRequest(new { message = "El ID proporcionado no es válido." });
 
-            if (id != asset.assetid)
+            if (id != asset.AssetId)
                 return BadRequest(new { message = "El ID de la URL no coincide con el ID del cuerpo de la solicitud." });
 
-            if (string.IsNullOrWhiteSpace(asset.name))
+            if (string.IsNullOrWhiteSpace(asset.Name))
                 return BadRequest(new { message = "El nombre del activo es obligatorio." });
 
-            if (string.IsNullOrWhiteSpace(asset.codeid))
+            if (string.IsNullOrWhiteSpace(asset.CodeId))
                 return BadRequest(new { message = "El código del activo es obligatorio." });
 
             var existeAsset = await _assetService.GetByIdAsync(id);

@@ -26,8 +26,8 @@ public class AssetService : IAssetService
 
     public async Task<Asset> CreateAsync(Asset asset)
     {
-        asset.assetid = Guid.NewGuid();
-        asset.isdeleted = false;
+        asset.AssetId = Guid.NewGuid();
+        asset.IsDeleted = false;
         _context.Assets.Add(asset);
         await _context.SaveChangesAsync();
         return asset;
@@ -35,7 +35,7 @@ public class AssetService : IAssetService
 
     public async Task<bool> UpdateAsync(Guid id, Asset asset)
     {
-        if (id != asset.assetid) return false;
+        if (id != asset.AssetId) return false;
 
         _context.Entry(asset).State = EntityState.Modified;
 
@@ -56,7 +56,7 @@ public class AssetService : IAssetService
         var asset = await _context.Assets.FindAsync(id);
         if (asset == null) return false;
 
-        asset.isdeleted = true;
+        asset.IsDeleted = true;
         _context.Entry(asset).State = EntityState.Modified;
 
         await _context.SaveChangesAsync();
@@ -65,6 +65,6 @@ public class AssetService : IAssetService
 
     private async Task<bool> AssetExists(Guid id)
     {
-        return await _context.Assets.AnyAsync(e => e.assetid == id);
+        return await _context.Assets.AnyAsync(e => e.AssetId == id);
     }
 }

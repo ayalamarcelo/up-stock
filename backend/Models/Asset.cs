@@ -7,21 +7,21 @@ namespace UpStock.Models;
 public class Asset
 {
     [Key]
-    public Guid assetid { get; set; }
+    public Guid AssetId { get; set; }
 
     [Required]
-    public Guid categoryid { get; set; }
+    public Guid CategoryId { get; set; }
 
     [Required]
-    public Guid statusid { get; set; }
+    public Guid StatusId { get; set; }
 
     [Required]
     [StringLength(150)]
-    public string name { get; set; } = string.Empty;
+    public string Name { get; set; } = string.Empty;
 
     [Required]
     [StringLength(100)]
-    public string codeid { get; set; } = string.Empty;
+    public string CodeId { get; set; } = string.Empty;
 
-    public bool isdeleted { get; set; } = false;
+    public bool IsDeleted { get; set; } = false;
 }

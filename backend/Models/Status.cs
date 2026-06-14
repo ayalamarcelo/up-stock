@@ -7,12 +7,12 @@ namespace UpStock.Models;
 public class Status
 {
     [Key]
-    public Guid statusid { get; set; } 
+    public Guid StatusId { get; set; } 
 
     [Required]
     [StringLength(150)]
-    public string namestatus { get; set; } = string.Empty; 
+    public string NameStatus { get; set; } = string.Empty; 
 
     [StringLength(255)]
-    public string? description { get; set; } 
+    public string? Description { get; set; } 
 }

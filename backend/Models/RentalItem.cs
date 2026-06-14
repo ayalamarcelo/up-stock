@@ -16,9 +16,9 @@ public class RentalItem
     public Guid AssetID { get; set; }
 
     // Propiedades de navegación
-    [ForeignKey("RentalID")]
+    [ForeignKey("rental_id")]
     public virtual Rental? Rental { get; set; }
 
-    [ForeignKey("AssetID")]
+    [ForeignKey("asset_id")]
     public virtual Asset? Asset { get; set; }
 }

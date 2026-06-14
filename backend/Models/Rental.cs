@@ -22,12 +22,12 @@ public class Rental
     public DateTime RentalDateExpected { get; set; }
 
     // Propiedades de navegación para EF Core
-    [ForeignKey("StatusID")]
+    [ForeignKey("status_id")]
     public virtual Status? Status { get; set; }
     
-    [ForeignKey("ClientID")]
+    [ForeignKey("client_id")]
     public virtual Client? Client { get; set; }
     
-    [ForeignKey("UserID")]
+    [ForeignKey("user_id")]
     public virtual User? User { get; set; }
 }

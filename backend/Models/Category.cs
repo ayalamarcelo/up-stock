@@ -7,7 +7,7 @@ namespace UpStock.Models;
 public class Category
 {
     [Key] //
-    [Column("categoryid")] 
+    [Column("category_id")] 
     public Guid CategoryID { get; set; } = Guid.NewGuid();
 
     [Required] 

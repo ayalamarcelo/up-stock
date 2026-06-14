@@ -26,7 +26,7 @@ public class StatusService : IStatusService
 
     public async Task<Status> CreateAsync(Status status)
     {
-        status.statusid = Guid.NewGuid();
+        status.StatusId = Guid.NewGuid();
         _context.Statuses.Add(status);
         await _context.SaveChangesAsync();
         return status;
@@ -34,7 +34,7 @@ public class StatusService : IStatusService
 
     public async Task<bool> UpdateAsync(Guid id, Status status)
     {
-        if (id != status.statusid) return false;
+        if (id != status.StatusId) return false;
 
         _context.Entry(status).State = EntityState.Modified;
 
@@ -62,6 +62,6 @@ public class StatusService : IStatusService
 
     private async Task<bool> StatusExists(Guid id)
     {
-        return await _context.Statuses.AnyAsync(e => e.statusid == id);
+        return await _context.Statuses.AnyAsync(e => e.StatusId == id);
     }
 }
