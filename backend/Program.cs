@@ -3,8 +3,16 @@ using Microsoft.OpenApi.Models;
 using UpStock.Data;
 using UpStock.Services;
 using UpStock.Interfaces;
+using Serilog;
+using UpStock.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
+
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .CreateLogger();
+
+builder.Host.UseSerilog();
 
 // Agregar servicios de Controladores
 builder.Services.AddControllers();
@@ -66,6 +74,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseMiddleware<UserLoggingMiddleware>();
+
 app.MapControllers();
 
 app.Run();
