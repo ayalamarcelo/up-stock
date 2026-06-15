@@ -2,11 +2,15 @@
   "Logging": {
     "LogLevel": {
       "Default": "Information",
-      "Microsoft.AspNetCore": "Warning"
+      "Microsoft.AspNetCore": "Information"
     }
   },
   "ConnectionStrings": {
-    "DefaultConnection": "Host=localhost;Port=5432;Database=upstock_db;Username=username;Password=your_password;"
+    "DefaultConnection": "Host=localhost;Port=5432;Database=upstock_db;Username=TU_USUARIO_LOCAL;Password=TU_CONTRASEÑA_LOCAL;"
+  },
+  "Jwt": {
+    "Issuer": "UpStockAPI-Dev",
+    "Audience": "UpStockClient-Dev"
   },
   "AllowedHosts": "*"
 }
