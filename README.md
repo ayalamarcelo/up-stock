@@ -60,3 +60,14 @@ Para poner en marcha el backend :
 
 > [!NOTE]
 > Solo si el paso 3 no funciona. Elegir la versión de .NET propia.
+
+## Correr absolutamente todo
+
+```bash
+dotnet test
+```
+## Correr solo las pruebas BDD del backend
+
+```bash
+dotnet test backend.Tests/backend.Tests.csproj
+```
