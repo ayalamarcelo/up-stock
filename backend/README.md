@@ -1,67 +1,142 @@
 <h1 align="center">UpStock - Backend API</h1>
 
-Este es el backend del sistema UpStock, desarrollado en .NET 10 utilizando una arquitectura limpia basada en Controladores y Servicios, e integrado con PostgreSQL mediante Entity Framework Core.
+<p align="center">
+  Backend del sistema <strong>UpStock</strong>, una plataforma para la gestión de activos y alquileres.
+  Desarrollado en <strong>.NET 9</strong> con arquitectura limpia basada en Controladores, Servicios e Interfaces,
+  integrado con <strong>PostgreSQL</strong> mediante Entity Framework Core.
+</p>
 
-<p>TECNOLOGÍAS Y HERRAMIENTAS</p>
+---
 
-    Framework: .NET 10.0 (Web API)
+## Tecnologías y Herramientas
 
-    Base de Datos: PostgreSQL
+| Tecnología | Uso |
+|---|---|
+| .NET 9 (Web API) | Framework principal del backend |
+| PostgreSQL | Motor de base de datos relacional |
+| Entity Framework Core (Npgsql) | ORM para mapeo de objetos a tablas |
+| Serilog | Registro y auditoría de operaciones |
+| JWT (JSON Web Tokens) | Autenticación stateless de usuarios |
+| Swashbuckle / Swagger | Documentación interactiva de la API |
+| DotNetEnv | Carga de variables de entorno desde `.env` |
 
-    ORM: Entity Framework Core (versión 10.0)
+---
 
-    Documentación: OpenAPI / Swagger (Swashbuckle)
+## Arquitectura del Proyecto
 
-<p>ARQUITECTURA DEL PROYECTO</p>
+El proyecto sigue el patrón **Controller → Interface → Service**, desacoplando la lógica de negocio de los endpoints HTTP:
 
-El proyecto maneja una estructura desacoplada estándar para .NET. Las rutas no usan una carpeta independiente, sino que se resuelven directamente en los controladores mediante Enrutamiento por Atributos:
-
+```
 backend/
--- Controllers/      -> Endpoints de la API y manejo de rutas (HTTP GET, POST, etc.)
--- Models/           -> Modelos de datos (Entidades de C#) y el DbContext de Entity Framework
--- Services/         -> Lógica de negocio (Validaciones, cálculos y operaciones principales)
--- Program.cs        -> Configuración central de la app, inyección de dependencias y middlewares
--- backend.csproj    -> Archivo de configuración del proyecto y paquetes de NuGet
+├── Controllers/        → Endpoints de la API (HTTP GET, POST, PUT, DELETE)
+├── DTOs/               → Objetos de transferencia de datos (Request/Response)
+├── Interfaces/         → Contratos de los servicios (IAssetService, IAuthService, etc.)
+├── Middlewares/        → Middlewares personalizados (Logging con Serilog)
+├── Migrations/         → Historial de cambios de la base de datos (Entity Framework)
+├── Models/             → Entidades C# que mapean a las tablas de PostgreSQL
+├── Services/           → Lógica de negocio (implementación de las interfaces)
+├── Program.cs          → Configuración central: DI, JWT, Swagger, middlewares
+└── backend.csproj      → Paquetes NuGet del proyecto
+```
 
-<p>GUÍA DE CONFIGURACIÓN INICIAL (PASO A PASO)</p>
+---
 
-Sigue estos pasos en orden para clonar, configurar y levantar el entorno de desarrollo en tu computadora local:
+## Guía de Configuración Inicial (Paso a Paso)
 
-    Prerrequisitos
-    Asegúrate de tener instalado el SDK de .NET 10 en tu máquina. Puedes verificarlo corriendo el siguiente comando en tu terminal:
+### 1. Prerrequisitos
 
+Asegurate de tener instalado en tu máquina:
+- [.NET 9 SDK](https://dotnet.microsoft.com/download/dotnet/9.0)
+- [PostgreSQL](https://www.postgresql.org/download/) (o una instancia en la nube)
+- [pgAdmin](https://www.pgadmin.org/) (opcional, para visualizar la base de datos)
+
+Verificá que el SDK esté instalado:
+```bash
 dotnet --list-sdks
+```
 
-    Levantar la Base de Datos (PostgreSQL en Docker)
-    Si no tienes una instancia local nativa de PostgreSQL, puedes levantar un contenedor rápido de Docker en el puerto 5432 ejecutando:
+---
 
-docker run --name sga-postgres -e POSTGRES_PASSWORD=tu_password -e POSTGRES_DB=tu_base_datos -p 5432:5432 -d postgres
+### 2. Configurar las Variables de Entorno
 
-(Nota: Asegúrate de crear las tablas necesarias en tu gestor de base de datos favorito, como pgAdmin o DBeaver, antes de pasar al siguiente paso).
+El proyecto usa un archivo `.env` para guardar datos sensibles (contraseñas, claves JWT). Este archivo **nunca se sube a GitHub** por seguridad.
 
-    Instalación de Herramientas y Paquetes
-    En caso de clonar el repositorio por primera vez, restaura los paquetes de NuGet necesarios ejecutando lo siguiente dentro de la carpeta backend:
+Copiá el archivo de ejemplo y renombralo:
+```bash
+# Dentro de la carpeta /backend
+cp .env.example .env
+```
 
-dotnet add package Microsoft.EntityFrameworkCore.Design
-dotnet add package Npgsql.EntityFrameworkCore.PostgreSQL
-dotnet add package Swashbuckle.AspNetCore
+Luego editá el archivo `.env` con tus datos reales:
+```env
+CONNECTION_STRING="Host=localhost;Port=5432;Database=upstock;Username=postgres;Password=tu_password"
+JWT_KEY="UnaClaveSecretaMuyLargaYSeguraParaFirmarTokens"
+JWT_ISSUER="UpStockAPI"
+JWT_AUDIENCE="UpStockClient"
+```
 
-    Mapear la Base de Datos a C# (Scaffolding)
-    Para leer las tablas de PostgreSQL y generar automáticamente los archivos dentro de la carpeta Models/, corre este comando (actualizando las credenciales por tus datos reales):
+---
 
-dotnet ef dbcontext scaffold "Host=localhost;Database=tu_base_datos;Username=postgres;Password=tu_password" Npgsql.EntityFrameworkCore.PostgreSQL -o Models --force
+### 3. Configurar los Archivos de Configuración
 
-    Compilar y Ejecutar el Proyecto
-    Finalmente, compila el código para asegurarte de que todo esté verde y levanta el servidor de desarrollo:
+De la misma forma, copiá los archivos de configuración de ejemplo:
+```bash
+cp appsettings.json.example appsettings.json
+cp appsettings.Development.json.example appsettings.Development.json
+```
 
+Editá `appsettings.Development.json` para poner tu cadena de conexión local (la misma que en `.env`).
+
+---
+
+### 4. Crear la Base de Datos y Aplicar las Migraciones
+
+Primero, creá una base de datos vacía llamada `upstock` en tu pgAdmin (o el nombre que hayas puesto en tu `.env`).
+
+Luego, aplicá las migraciones para generar todas las tablas automáticamente:
+```bash
+dotnet ef database update
+```
+
+---
+
+### 5. Compilar y Ejecutar el Proyecto
+
+```bash
 dotnet build
 dotnet run
+```
 
-<p>DOCUMENTACIÓN DE LA API (OPENAPI / SWAGGER)</p>
+El servidor va a quedar escuchando en: **http://localhost:5102**
 
-El proyecto viene con Swagger integrado para que puedas probar los endpoints directamente desde una interfaz gráfica en el navegador de manera interactiva.
+---
 
-Una vez que el servidor esté corriendo con dotnet run, puedes acceder a la documentación mediante las siguientes URL:
+## Documentación de la API (Swagger)
 
-Enlace HTTP: http://localhost:5000/swagger
-Enlace HTTPS: https://localhost:5001/swagger
+Una vez que el servidor esté corriendo, accedé a la documentación interactiva en:
+
+**http://localhost:5102/swagger**
+
+### Cómo autenticarse en Swagger
+
+1. Hacé un `POST` a `/api/Auth/register` para crear un usuario nuevo.
+2. Copiá el valor del campo `token` de la respuesta.
+3. Hacé click en el botón **Authorize** 🔒 (arriba a la derecha de Swagger).
+4. Escribí `Bearer ` seguido de tu token y hacé click en **Authorize**.
+5. A partir de ese momento, todas las peticiones van firmadas con tu usuario.
+
+---
+
+## Registro de Operaciones (Serilog)
+
+El backend registra automáticamente todas las operaciones de escritura (`POST`, `PUT`, `DELETE`) en archivos de log diarios, incluyendo el **email real del usuario autenticado** que realizó cada acción.
+
+Los archivos de log se generan en la carpeta:
+```
+backend/logs/upstock-YYYYMMDD.txt
+```
+
+Ejemplo de una línea de log:
+```
+2026-06-14 17:22:09 -03:00 [INF] (usuario@email.com) Operacion Iniciada: Usuario usuario@email.com ejecuto POST en /api/Asset
+```
