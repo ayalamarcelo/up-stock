@@ -19,14 +19,23 @@ Log.Logger = new LoggerConfiguration()
 
 builder.Host.UseSerilog();
 
+// CORS — permite que el frontend (file:// o localhost) llame al backend
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("FrontendPolicy", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
 // Agregar servicios de Controladores con configuración de nombres JSON en PascalCase
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.PropertyNamingPolicy = null;
     });
-// Agregar servicios de Controladores
-builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
@@ -124,6 +133,44 @@ builder.Services.AddScoped<IRentalItemService, RentalItemService>();
 
 var app = builder.Build();
 
+// =====================================================
+// SEED DATA — Datos iniciales si la BD está vacía
+// =====================================================
+try
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+        if (!db.Statuses.Any())
+        {
+            db.Statuses.AddRange(
+                new UpStock.Models.Status { NameStatus = "Disponible" },
+                new UpStock.Models.Status { NameStatus = "En uso" },
+                new UpStock.Models.Status { NameStatus = "En mantenimiento" },
+                new UpStock.Models.Status { NameStatus = "Fuera de servicio" }
+            );
+        }
+
+        if (!db.Categories.Any())
+        {
+            db.Categories.AddRange(
+                new UpStock.Models.Category { NameCategory = "Electrónica" },
+                new UpStock.Models.Category { NameCategory = "Audio y Video" },
+                new UpStock.Models.Category { NameCategory = "Iluminación" },
+                new UpStock.Models.Category { NameCategory = "Muebles" },
+                new UpStock.Models.Category { NameCategory = "Herramientas" }
+            );
+        }
+
+        db.SaveChanges();
+    }
+}
+catch (Exception ex)
+{
+    Log.Warning("No se pudo conectar a la base de datos para cargar los datos semilla: {Message}", ex.Message);
+}
+
 // 2. Configuración de la UI de Swagger
 if (app.Environment.IsDevelopment())
 {
@@ -136,6 +183,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("FrontendPolicy");
 
 app.UseAuthentication();
 app.UseAuthorization();
