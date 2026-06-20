@@ -69,9 +69,9 @@ public class AuthService : IAuthService
 
     private string GenerateJwtToken(User user)
     {
-        var jwtKey = Environment.GetEnvironmentVariable("JWT_KEY");
-        var jwtIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER");
-        var jwtAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE");
+        var jwtKey = Environment.GetEnvironmentVariable("JWT_KEY") ?? "SuperSecretKeyForUpStockJWTAuth2026";
+        var jwtIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER") ?? "UpStockAPI";
+        var jwtAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE") ?? "UpStockClient";
 
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey!));
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
