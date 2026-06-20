@@ -14,11 +14,17 @@ public class UsersController : ControllerBase
 
     // GET: api/Users
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+    public async Task<ActionResult<IEnumerable<User>>> GetUsers(
+        int page = 1,
+        int pageSize = 10
+    )
     {
         try
         {
-            var users = await _userService.GetAllAsync();
+            var users = await _userService.GetAllAsync(
+                page,
+                pageSize
+            );
 
             if (!users.Any())
                 return NotFound("No hay usuarios registrados en el sistema.");

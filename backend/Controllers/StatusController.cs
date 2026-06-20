@@ -17,11 +17,13 @@ public class StatusController : ControllerBase
 
     // GET: api/Status
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Status>>> GetStatuses()
+    public async Task<ActionResult<IEnumerable<Status>>> GetStatuses(
+        int page = 1,
+        int pageSize = 10)
     {
         try
         {
-            var statuses = await _statusService.GetAllAsync();
+            var statuses = await _statusService.GetAllAsync(page, pageSize);
 
             if (!statuses.Any())
                 return NotFound(new { message = "No hay estados registrados en el sistema." });

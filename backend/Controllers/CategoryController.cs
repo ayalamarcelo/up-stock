@@ -17,11 +17,15 @@ public class CategoryController : ControllerBase
 
     // GET: api/Category
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Category>>> GetCategories()
+    public async Task<ActionResult<IEnumerable<Category>>> GetCategories(
+        int page = 1,
+        int pageSize = 10)
     {
         try
         {
-            var categories = await _categoryService.GetAllAsync();
+            var categories = await _categoryService.GetAllAsync(
+                page,
+                pageSize);
 
             if (!categories.Any())
                 return NotFound(new { message = "No hay categorías registradas en el sistema." });

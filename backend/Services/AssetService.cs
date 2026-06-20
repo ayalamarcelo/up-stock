@@ -14,9 +14,12 @@ public class AssetService : IAssetService
         _context = context;
     }
 
-    public async Task<IEnumerable<Asset>> GetAllAsync()
+    public async Task<IEnumerable<Asset>> GetAllAsync(int page, int pageSize)
     {
-        return await _context.Assets.ToListAsync();
+        return await _context.Assets
+        .Skip((page - 1) * pageSize)
+        .Take(pageSize)
+        .ToListAsync();
     }
 
     public async Task<Asset?> GetByIdAsync(Guid id)

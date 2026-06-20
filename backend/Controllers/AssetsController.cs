@@ -17,11 +17,17 @@ public class AssetController : ControllerBase
 
     // GET: api/Asset
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Asset>>> GetAssets()
+    public async Task<ActionResult<IEnumerable<Asset>>> GetAssets(
+          int page = 1,
+          int pageSize = 10
+    )
     {
         try
         {
-            var assets = await _assetService.GetAllAsync();
+            var assets = await _assetService.GetAllAsync(
+                page,
+                pageSize
+            );
 
             if (!assets.Any())
                 return NotFound(new { message = "No hay activos registrados en el sistema." });

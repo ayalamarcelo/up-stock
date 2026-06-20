@@ -14,11 +14,17 @@ public class ClientsController : ControllerBase
 
     // GET: api/Clients
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Client>>> GetClients()
+    public async Task<ActionResult<IEnumerable<Client>>> GetClients(
+        int page = 1,
+        int pageSize = 10)
+    
     {
         try
         {
-            var clients = await _clientService.GetAllAsync();
+            var clients = await _clientService.GetAllAsync(
+                page,
+                pageSize
+            );
 
             if (!clients.Any())
                 return NotFound("No hay clientes registrados en el sistema.");

@@ -14,13 +14,15 @@ public class RentalService : IRentalService
         _context = context;
     }
 
-    public async Task<IEnumerable<Rental>> GetAllAsync()
+    public async Task<IEnumerable<Rental>> GetAllAsync(int page, int pageSize)
     {
         // Incluimos las relaciones para que el JSON devuelva los datos completos
         return await _context.Rentals
             .Include(r => r.Client)
             .Include(r => r.Status)
             .Include(r => r.User)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
             .ToListAsync();
     }
 

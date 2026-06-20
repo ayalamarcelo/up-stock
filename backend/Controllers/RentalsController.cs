@@ -19,17 +19,27 @@ public class RentalsController : ControllerBase
 
     // GET: api/Rentals
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Rental>>> GetRentals()
+    public async Task<ActionResult<IEnumerable<Rental>>> GetRentals(
+        int page = 1,
+        int pageSize = 10)
+    
     {
         try
         {
-            var rentals = await _rentalService.GetAllAsync();
+            var rentals = await _rentalService.GetAllAsync(
+                page,
+                pageSize
+            );
             return Ok(rentals);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error al obtener la lista de alquileres.");
-            return StatusCode(500, new { message = "Error interno al recuperar los alquileres.", detalle = ex.Message });
+            return StatusCode(500, new
+            {
+                message = "Error interno al recuperar los alquileres.",
+                detalle = ex.Message
+            });
         }
     }
 

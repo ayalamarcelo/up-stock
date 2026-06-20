@@ -14,9 +14,13 @@ public class ClientService : IClientService
         _context = context;
     }
 
-    public async Task<IEnumerable<Client>> GetAllAsync()
+    public async Task<IEnumerable<Client>> GetAllAsync(int page, int pageSize)
     {
-        return await _context.Clients.Where(c => c.IsActive).ToListAsync();
+        return await _context.Clients
+        .Where(c => c.IsActive)
+        .Skip((page - 1) * pageSize)
+        .Take(pageSize)
+        .ToListAsync();
     }
 
     public async Task<Client?> GetByIdAsync(Guid id)
