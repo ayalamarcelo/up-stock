@@ -103,7 +103,8 @@ builder.Services.AddSwaggerGen(c =>
 // Registra el DbContext conectado a PostgreSQL
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
-    .UseLowerCaseNamingConvention());
+    .UseLowerCaseNamingConvention()
+    .ConfigureWarnings(warnings => warnings.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning)));
 
 // =================================================================
 // REGISTRO DE SERVICIOS DE LA APLICACIÓN (INYECCIÓN DE DEPENDENCIAS)
