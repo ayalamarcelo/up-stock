@@ -15,6 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 Log.Logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)
+    .WriteTo.Console()
     .CreateLogger();
 
 builder.Host.UseSerilog();
