@@ -121,3 +121,102 @@ Serilog genera archivos de log diarios en la carpeta `backend/logs/`. Cada opera
 ```
 2026-06-14 17:22:09 -03:00 [INF] (usuario@email.com) Operacion Iniciada: Usuario usuario@email.com ejecuto POST en /api/Asset
 ```
+
+##  Pruebas Unitarias
+
+Las pruebas unitarias se encuentran en el proyecto `backend.Tests` y cubren todos los controladores de la API.
+
+### Herramientas utilizadas
+- **xUnit** → Framework de pruebas
+- **Moq** → Simulación de servicios (sin base de datos real)
+- **FluentAssertions** → Verificaciones legibles
+
+### Cobertura
+
+| Controlador        | Pruebas |
+| CategoryController | 5 |
+| AssetController    | 10|
+| StatusController   | 8 |
+| ClientsController  | 7 |
+| AuthController     | 5 |
+| RentalsController  | 4 |
+| **Total**        | **39** |
+
+---
+
+### Detalle de pruebas por controlador
+
+#### CategoryController
+| Caso de prueba | Estado esperado | Resultado |
+|---|---|---|
+| GetCategories_Retorna200_CuandoHayCategorias | 200 OK | 
+| GetCategories_Retorna404_CuandoNoHayCategorias | 404 Not Found | 
+| PostCategory_Retorna201_CuandoDatosValidos | 201 Created | 
+| PostCategory_Retorna400_CuandoNombreEsVacio | 400 Bad Request | 
+| DeleteCategory_Retorna404_CuandoNoExiste | 404 Not Found | 
+
+#### AssetController
+| Caso de prueba | Estado esperado | Resultado |
+|---|---|---|
+| GetAssets_Retorna200_CuandoHayActivos | 200 OK | 
+| GetAssets_Retorna404_CuandoNoHayActivos | 404 Not Found | 
+| GetAsset_Retorna200_CuandoExiste | 200 OK | 
+| GetAsset_Retorna404_CuandoNoExiste | 404 Not Found | 
+| PostAsset_Retorna201_CuandoDatosValidos | 201 Created | 
+| PostAsset_Retorna400_CuandoNombreEsVacio | 400 Bad Request | 
+| PostAsset_Retorna400_CuandoCodigoEsVacio | 400 Bad Request | 
+| PostAsset_Retorna400_CuandoCategoriaEsVacia | 400 Bad Request | 
+| PutAsset_Retorna400_CuandoIdsNoCoinciden | 400 Bad Request | 
+| DeleteAsset_Retorna404_CuandoNoExiste | 404 Not Found | 
+
+#### StatusController
+| Caso de prueba | Estado esperado | Resultado |
+|---|---|---|
+| GetStatuses_Retorna200_CuandoHayEstados | 200 OK | 
+| GetStatuses_Retorna404_CuandoNoHayEstados | 404 Not Found | 
+| GetStatus_Retorna200_CuandoExiste | 200 OK | 
+| GetStatus_Retorna404_CuandoNoExiste | 404 Not Found | 
+| PostStatus_Retorna201_CuandoDatosValidos | 201 Created | 
+| PostStatus_Retorna400_CuandoNombreEsVacio | 400 Bad Request | 
+| PutStatus_Retorna400_CuandoIdsNoCoinciden | 400 Bad Request | 
+| DeleteStatus_Retorna404_CuandoNoExiste | 404 Not Found | 
+
+#### ClientsController
+| Caso de prueba | Estado esperado | Resultado |
+|---|---|---|
+| GetClients_Retorna200_CuandoHayClientes | 200 OK | 
+| GetClient_Retorna200_CuandoExiste | 200 OK | 
+| GetClient_Retorna404_CuandoNoExiste | 404 Not Found | 
+| CreateClient_Retorna201_CuandoDatosValidos | 201 Created | 
+| CreateClient_Retorna400_CuandoNombreEsVacio | 400 Bad Request | 
+| CreateClient_Retorna400_CuandoDniCuitEsVacio | 400 Bad Request | 
+| DeleteClient_Retorna404_CuandoNoExiste | 404 Not Found | 
+
+#### AuthController
+| Caso de prueba | Estado esperado | Resultado |
+|---|---|---|
+| Register_Retorna200_CuandoDatosValidos | 200 OK | 
+| Register_Retorna400_CuandoEmailYaExiste | 400 Bad Request | 
+| Login_Retorna200_CuandoCredencialesValidas | 200 OK | 
+| Login_Retorna401_CuandoCredencialesInvalidas | 401 Unauthorized | 
+| Login_Retorna401_CuandoUsuarioNoExiste | 401 Unauthorized | 
+
+#### RentalsController
+| Caso de prueba | Estado esperado | Resultado |
+|---|---|---|
+| GetRentals_Retorna200_CuandoHayAlquileres | 200 OK | 
+| GetRental_Retorna200_CuandoExiste | 200 OK | 
+| GetRental_Retorna404_CuandoNoExiste | 404 Not Found | 
+| PostRental_Retorna201_CuandoDatosValidos | 201 Created | 
+
+### Cómo ejecutar las pruebas
+
+```powershell
+cd C:\ruta\del\proyecto
+dotnet test
+```
+
+### Resultado esperado
+```
+Resumen de pruebas: total: 39; con errores: 0; correcto: 39
+```
