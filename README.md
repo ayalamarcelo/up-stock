@@ -85,6 +85,12 @@ cp backend/appsettings.Development.json.example backend/appsettings.Development.
 
 ## Correr proyecto
 
+Desde raíz:
+
+```bash
+dotnet run --project backend
+```
+
 Para poner en marcha el backend:
 
 1. `cd backend`
