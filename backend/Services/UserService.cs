@@ -14,9 +14,13 @@ public class UserService : IUserService
         _context = context;
     }
 
-    public async Task<IEnumerable<User>> GetAllAsync()
+    public async Task<IEnumerable<User>> GetAllAsync(int page, int pageSize)
     {
-        return await _context.Users.Where(u => u.IsActive).ToListAsync();
+        return await _context.Users
+        .Where(u => u.IsActive)
+        .Skip((page - 1) * pageSize)
+        .Take(pageSize)
+        .ToListAsync();
     }
 
     public async Task<User?> GetByIdAsync(Guid id)

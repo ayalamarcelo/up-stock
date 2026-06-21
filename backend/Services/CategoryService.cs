@@ -14,9 +14,12 @@ public class CategoryService : ICategoryService
         _context = context;
     }
 
-    public async Task<IEnumerable<Category>> GetAllAsync()
+    public async Task<IEnumerable<Category>> GetAllAsync(int page, int pageSize)
     {
-        return await _context.Categories.ToListAsync();
+        return await _context.Categories
+        .Skip((page - 1) * pageSize)
+        .Take(pageSize)
+        .ToListAsync();
     }
 
     public async Task<Category?> GetByIdAsync(Guid id)

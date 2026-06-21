@@ -14,9 +14,12 @@ public class StatusService : IStatusService
         _context = context;
     }
 
-    public async Task<IEnumerable<Status>> GetAllAsync()
+    public async Task<IEnumerable<Status>> GetAllAsync(int page, int pageSize)
     {
-        return await _context.Statuses.ToListAsync();
+        return await _context.Statuses
+        .Skip((page - 1) * pageSize)
+        .Take(pageSize)
+        .ToListAsync();
     }
 
     public async Task<Status?> GetByIdAsync(Guid id)
