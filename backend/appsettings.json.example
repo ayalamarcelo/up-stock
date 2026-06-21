@@ -5,12 +5,32 @@
       "Microsoft.AspNetCore": "Warning"
     }
   },
+  "Serilog": {
+    "MinimumLevel": {
+      "Default": "Information",
+      "Override": {
+        "Microsoft": "Warning",
+        "Microsoft.Hosting.Lifetime": "Information",
+        "System": "Warning"
+      }
+    },
+    "WriteTo": [
+      { "Name": "Console" },
+      {
+        "Name": "File",
+        "Args": {
+          "path": "logs/log-.txt",
+          "rollingInterval": "Day"
+        }
+      }
+    ]
+  },
   "ConnectionStrings": {
-    "DefaultConnection": "Host=localhost;Port=5432;Database=upstock_db;Username=TU_USUARIO;Password=TU_CONTRASEÑA;"
+    "DefaultConnection": ""
   },
   "Jwt": {
     "Issuer": "UpStockAPI",
     "Audience": "UpStockClient"
   },
-  "AllowedHosts": "api.upstock.com;upstock.com"
+  "AllowedHosts": "*"
 }

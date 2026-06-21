@@ -194,4 +194,9 @@ app.UseMiddleware<UserLoggingMiddleware>();
 
 app.MapControllers();
 
+Console.ForegroundColor = ConsoleColor.Green;
+Console.WriteLine("¡Servidor de UpStock corriendo con éxito!");
+Console.WriteLine($"Entorno: {app.Environment.EnvironmentName}");
+Console.ResetColor();
+
 app.Run();

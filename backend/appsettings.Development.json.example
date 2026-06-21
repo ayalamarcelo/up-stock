@@ -6,7 +6,7 @@
     }
   },
   "ConnectionStrings": {
-    "DefaultConnection": "Host=localhost;Port=5432;Database=upstock_db;Username=TU_USUARIO_LOCAL;Password=TU_CONTRASEÑA_LOCAL;"
+    "DefaultConnection": "Host=localhost;Port=5432;Database=upstock_db;Username=username;Password=password;"
   },
   "Jwt": {
     "Issuer": "UpStockAPI-Dev",
