@@ -94,14 +94,10 @@ public class StatusController : ControllerBase
             if (string.IsNullOrWhiteSpace(status.NameStatus))
                 return BadRequest(new { message = "El nombre del estado es obligatorio." });
 
-            var existe = await _statusService.GetByIdAsync(id);
-            if (existe == null)
-                return NotFound(new { message = $"No se encontró ningún estado con el ID {id}." });
-
             var result = await _statusService.UpdateAsync(id, status);
 
             if (!result)
-                return BadRequest(new { message = "Error al actualizar el estado." });
+                return NotFound(new { message = $"No se encontró ningún estado con el ID {id}." });
 
             return NoContent();
         }

@@ -96,14 +96,10 @@ public class CategoryController : ControllerBase
             if (string.IsNullOrWhiteSpace(category.NameCategory))
                 return BadRequest(new { message = "El nombre de la categoría es obligatorio." });
 
-            var existe = await _categoryService.GetByIdAsync(id);
-            if (existe == null)
-                return NotFound(new { message = $"No se encontró ninguna categoría con el ID {id}." });
-
             var result = await _categoryService.UpdateAsync(id, category);
 
             if (!result)
-                return BadRequest(new { message = "Error al actualizar la categoría." });
+                return NotFound(new { message = $"No se encontró ninguna categoría con el ID {id}." });
 
             return NoContent();
         }

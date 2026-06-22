@@ -110,14 +110,10 @@ public class AssetController : ControllerBase
             if (string.IsNullOrWhiteSpace(asset.CodeId))
                 return BadRequest(new { message = "El código del activo es obligatorio." });
 
-            var existeAsset = await _assetService.GetByIdAsync(id);
-            if (existeAsset == null)
-                return NotFound(new { message = $"No se encontró ningún activo con el ID {id}." });
-
             var result = await _assetService.UpdateAsync(id, asset);
 
             if (!result)
-                return BadRequest(new { message = "Error al actualizar el activo." });
+                return NotFound(new { message = $"No se encontró ningún activo con el ID {id}." });
 
             return NoContent();
         }
@@ -126,7 +122,6 @@ public class AssetController : ControllerBase
             return StatusCode(500, new { message = $"Error interno del servidor: {ex.Message}" });
         }
     }
-
     // DELETE: api/Asset/{id}
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteAsset(Guid id)
