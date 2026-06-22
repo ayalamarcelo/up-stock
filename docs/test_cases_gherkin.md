@@ -1132,35 +1132,65 @@ Esta sección documenta los defectos detectados durante la ejecución de los cas
 | Campo | Detalle |
 |---|---|
 | **ID** | BUG-001 |
-| **Endpoints afectados** | `PUT /api/category/{id}`, `PUT /api/status/{id}`, `PUT /api/asset/{id}` y demás endpoints PUT del sistema |
-| **Caso de prueba** | CP-CAT-07, CP-STA-05, CP-ASS-08 |
+| **Endpoints afectados** | `PUT /api/category/{id}`, `PUT /api/status/{id}`, `PUT /api/asset/{id}` |
+| **Casos de prueba** | CP-CAT-07, CP-STA-05, CP-ASS-08 |
 | **Severidad** | Alta |
-| **Estado** | 🔴 Abierto |
+| **Estado** | ✅ **Resuelto** |
 | **Reportado en** | 21/06/2026 |
+| **Resuelto en** | 22/06/2026 |
 
 **Descripción:**
-Los endpoints PUT devuelven error 500 Internal Server Error al intentar actualizar una entidad existente. El problema fue confirmado en Category, Status y Asset, y por la naturaleza compartida del patrón de código se infiere que también afecta a los demás controladores que implementen actualizaciones (Client, Rental, User).
+Los endpoints PUT de los controladores Category, Status y Asset devolvían error 500 Internal Server Error al intentar actualizar una entidad existente.
 
-**Pasos para reproducir:**
+**Pasos para reproducir (antes del fix):**
 1. Obtener un ID válido con un GET (ej: `GET /api/category`, `GET /api/status` o `GET /api/asset`)
-2. Ejecutar el PUT correspondiente (`PUT /api/category/{id}`, `PUT /api/status/{id}`, `PUT /api/asset/{id}`) con el mismo ID en URL y body
+2. Ejecutar el PUT correspondiente con el mismo ID en URL y body
 3. Observar la respuesta
 
 **Resultado esperado:**
 204 No Content (entidad actualizada correctamente)
 
-**Resultado obtenido:**
+**Resultado obtenido (antes del fix):**
 500 Internal Server Error con mensaje similar al siguiente:
 > "The instance of entity type 'XXX' cannot be tracked because another instance with the same key value is already being tracked."
 
 **Causa raíz:**
-En los métodos `UpdateAsync` de los servicios (`CategoryService`, `StatusService`, `AssetService` y demás), Entity Framework intenta rastrear dos instancias de la misma entidad simultáneamente porque previamente se llamó a `GetByIdAsync` que ya cargó la entidad en el contexto. Como todos los servicios siguen este mismo patrón, el bug se replica en todos los endpoints PUT del sistema.
+En los métodos `Put` de los controladores se llamaba primero a `GetByIdAsync(id)` para verificar que la entidad existiera. Ese método cargaba la entidad en el contexto de Entity Framework y la dejaba siendo rastreada. Luego, al ejecutar `UpdateAsync(id, entidad)` con una nueva instancia que tenía el mismo ID, Entity Framework detectaba el conflicto de tracking porque no puede rastrear dos instancias de la misma entidad simultáneamente.
 
-**Solución propuesta:**
-Modificar los métodos `UpdateAsync` de **todos los servicios** del proyecto para usar `_context.Entry(entity).State = EntityState.Modified` o desadjuntar la entidad previa con `_context.Entry(entityExistente).State = EntityState.Detached`.
+**Solución aplicada:**
+Se eliminó la verificación previa con `GetByIdAsync` en los tres controladores (CategoryController, StatusController y AssetController). En su lugar, se delegó la responsabilidad de detectar la existencia al método `UpdateAsync` del servicio, que devuelve `true` si la actualización fue exitosa o `false` si la entidad no existe.
 
-**Impacto:**
-Imposibilita la actualización de categorías, estados y activos existentes, afectando la funcionalidad CRUD completa del sistema. Es un bug crítico que rompe el "U" del CRUD a nivel general.
+**Cambios realizados:**
+
+**CategoryController.cs — método PutCategory**
+- Se eliminó:
+```csharp
+var existe = await _categoryService.GetByIdAsync(id);
+if (existe == null)
+    return NotFound(...);
+```
+- Se dejó la llamada directa a `UpdateAsync` y se evalúa el resultado para devolver 404 si la entidad no existe.
+
+**StatusController.cs — método PutStatus**
+- Se aplicó el mismo patrón eliminando la verificación previa con `GetByIdAsync`.
+
+**AssetController.cs — método PutAsset**
+- Se aplicó el mismo patrón eliminando la verificación previa con `GetByIdAsync`.
+
+**Flujo corregido:**
+1. Llega request PUT con ID y body
+2. Validar campos (ID, nombre, código, etc)
+3. Llamar a `UpdateAsync(id, entidad)` directamente
+4. Si el método devuelve `false` → responder 404 Not Found
+5. Si el método devuelve `true` → responder 204 No Content
+
+**Beneficios adicionales:**
+- Se reduce de 2 a 1 las llamadas a la base de datos por cada PUT
+- Se elimina el conflicto de tracking de Entity Framework
+- Mejora el rendimiento de los endpoints de actualización
+
+**Verificación:**
+Se ejecutaron nuevamente los casos CP-CAT-07, CP-STA-05 y CP-ASS-08 obteniendo el código 204 No Content esperado en los tres controladores.
 
 ---
 
@@ -1168,7 +1198,7 @@ Imposibilita la actualización de categorías, estados y activos existentes, afe
 
 | ID | Endpoints | Severidad | Estado |
 |---|---|---|---|
-| BUG-001 | PUT /api/category/{id}, PUT /api/status/{id}, PUT /api/asset/{id} y demás endpoints PUT del sistema | Alta | 🔴 Abierto |
+| BUG-001 | PUT /api/category/{id}, PUT /api/status/{id}, PUT /api/asset/{id} | Alta | ✅ Resuelto |
 ---
 
 
