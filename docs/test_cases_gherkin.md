@@ -63,6 +63,11 @@ Para probar los casos de error interno del servidor:
 el servidor está corriendo
 - Restaurar la contraseña correcta una vez tomada la evidencia
 
+### Criterios de severidad
+- **🔴 Alta:** Funcionalidad principal del CRUD (crear, listar, actualizar, eliminar registros válidos)
+- **🟡 Media:** Validaciones de entrada, errores 404 y casos de borde
+- **🟢 Baja:** Errores 500 (requieren simular caída del entorno)
+
 ---
 
 ## MÓDULO 1 — AUTENTICACIÓN
@@ -81,6 +86,9 @@ Feature: Autenticación de usuarios
     And la respuesta debe contener un token JWT
 ```
 
+| | |
+|---|---|
+| **Severidad** | 🔴 Alta |
 | **Resultado esperado** | 200 OK + token JWT |
 | **Resultado obtenido** | 200 OK + token JWT |
  
@@ -99,6 +107,9 @@ Feature: Autenticación de usuarios
     And la respuesta debe contener el mensaje "El correo electrónico ya está registrado."
 ```
 
+| | |
+|---|---|
+| **Severidad** | 🟡 Media |
 | **Resultado esperado** | 400 Bad Request |
 | **Resultado obtenido** | 400 Bad Request |
 
@@ -117,6 +128,9 @@ Feature: Autenticación de usuarios
     And la respuesta debe contener un error de validación de formato de email
 ```
 
+| | |
+|---|---|
+| **Severidad** | 🟡 Media |
 | **Resultado esperado** | 400 Bad Request |
 | **Resultado obtenido** | 400 Bad Request |
 
@@ -136,6 +150,9 @@ Feature: Autenticación de usuarios
     And la respuesta debe contener el mensaje "La contraseña debe tener al menos 6 caracteres."
 ```
 
+| | |
+|---|---|
+| **Severidad** | 🟡 Media |
 | **Resultado esperado** | 400 Bad Request |
 | **Resultado obtenido** | 400 Bad Request |
 
@@ -155,6 +172,7 @@ Feature: Autenticación de usuarios
 ```
 | | |
 |---|---|
+| **Severidad** | 🔴 Alta |
 | **Resultado esperado** | 200 OK + token JWT |
 | **Resultado obtenido** | 200 OK + token JWT |
 
@@ -174,6 +192,7 @@ Feature: Autenticación de usuarios
 ```
 | | |
 |---|---|
+| **Severidad** | 🟡 Media |
 | **Resultado esperado** | 401 Unauthorized |
 | **Resultado obtenido** | 401 Unauthorized |
 
@@ -192,6 +211,7 @@ Feature: Autenticación de usuarios
 ```
 | | |
 |---|---|
+| **Severidad** | 🟡 Media |
 | **Resultado esperado** | 401 Unauthorized |
 | **Resultado obtenido** | 401 Unauthorized |
 
@@ -211,6 +231,7 @@ Feature: Autenticación de usuarios
 ```
 | | |
 |---|---|
+| **Severidad** | 🟢 Baja |
 | **Resultado esperado** | 500 Internal Server Error |
 | **Resultado obtenido** | 500 Internal Server Error |
 
@@ -230,6 +251,7 @@ Feature: Autenticación de usuarios
 ```
 | | |
 |---|---|
+| **Severidad** | 🟢 Baja |
 | **Resultado esperado** | 500 Internal Server Error |
 | **Resultado obtenido** | 500 Internal Server Error |
 
@@ -251,6 +273,7 @@ Feature: Gestión de categorías
 ```
 | | |
 |---|---|
+| **Severidad** | 🔴 Alta |
 | **Resultado esperado** | 200 OK + lista de categorías |
 | **Resultado obtenido** | 200 OK + lista de categorías |
 
@@ -268,6 +291,7 @@ Feature: Gestión de categorías
 ```
 | | |
 |---|---|
+| **Severidad** | 🟡 Media |
 | **Resultado esperado** | 404 Error: Not Found |
 | **Resultado obtenido** | 404 Error: Not Found |
 
@@ -285,6 +309,7 @@ Feature: Gestión de categorías
 ```
 | | |
 |---|---|
+| **Severidad** | 🔴 Alta |
 | **Resultado esperado** | 200 OK + objeto categoría |
 | **Resultado obtenido** | 200 OK + objeto categoría |
 
@@ -302,6 +327,7 @@ Feature: Gestión de categorías
 ```
 | | |
 |---|---|
+| **Severidad** | 🟡 Media |
 | **Resultado esperado** | 404 Not Found |
 | **Resultado obtenido** | 404 Not Found |
 
@@ -321,6 +347,7 @@ Feature: Gestión de categorías
 ```
 | | |
 |---|---|
+| **Severidad** | 🔴 Alta |
 | **Resultado esperado** | 201 Created + objeto creado |
 | **Resultado obtenido** | 201 Created + objeto creado |
 
@@ -341,6 +368,7 @@ Feature: Gestión de categorías
 ```
 | | |
 |---|---|
+| **Severidad** | 🟡 Media |
 | **Resultado esperado** | 400 Bad Request |
 | **Resultado obtenido** | 400 Bad Request |
 
@@ -359,6 +387,7 @@ Feature: Gestión de categorías
 ```
 | | |
 |---|---|
+| **Severidad** | 🔴 Alta |
 | **Resultado esperado** | 204 No Content |
 | **Resultado obtenido** | 204 No Content |
 
@@ -378,6 +407,7 @@ Feature: Gestión de categorías
 ```
 | | |
 |---|---|
+| **Severidad** | 🟡 Media |
 | **Resultado esperado** | 400 Bad Request |
 | **Resultado obtenido** | 400 Bad Request |
 
@@ -394,6 +424,7 @@ Feature: Gestión de categorías
 ```
 | | |
 |---|---|
+| **Severidad** | 🔴 Alta |
 | **Resultado esperado** | 204 No Content |
 | **Resultado obtenido** | 204 No Content |
 
@@ -410,6 +441,7 @@ Feature: Gestión de categorías
 ```
 | | |
 |---|---|
+| **Severidad** | 🟡 Media |
 | **Resultado esperado** | 404 Not Found |
 | **Resultado obtenido** | 404 Not Found |
 
@@ -427,6 +459,7 @@ Feature: Gestión de categorías
 ```
 | | |
 |---|---|
+| **Severidad** | 🟢 Baja |
 | **Resultado esperado** | 500 Internal Server Error |
 | **Resultado obtenido** | 500 Internal Server Error |
 
@@ -444,6 +477,7 @@ Feature: Gestión de categorías
 ```
 | | |
 |---|---|
+| **Severidad** | 🟢 Baja |
 | **Resultado esperado** | 500 Internal Server Error |
 | **Resultado obtenido** | 500 Internal Server Error |
 
@@ -465,6 +499,7 @@ Feature: Gestión de estados
 ```
 | | |
 |---|---|
+| **Severidad** | 🔴 Alta |
 | **Resultado esperado** | 200 OK + lista de estados |
 | **Resultado obtenido** | 200 OK + lista de estados |
 
@@ -482,6 +517,7 @@ Feature: Gestión de estados
 ```
 | | |
 |---|---|
+| **Severidad** | 🔴 Alta |
 | **Resultado esperado** | 200 OK + objeto estado |
 | **Resultado obtenido** | 200 OK + objeto estado |
 
@@ -502,6 +538,7 @@ Feature: Gestión de estados
 ```
 | | |
 |---|---|
+| **Severidad** | 🔴 Alta |
 | **Resultado esperado** | 201 Created + objeto creado |
 | **Resultado obtenido** | 201 Created + objeto creado |
 
@@ -521,6 +558,7 @@ Feature: Gestión de estados
 ```
 | | |
 |---|---|
+| **Severidad** | 🟡 Media |
 | **Resultado esperado** | 400 Bad Request |
 | **Resultado obtenido** | 400 Bad Request |
  
@@ -539,6 +577,7 @@ Feature: Gestión de estados
 ```
 | | |
 |---|---|
+| **Severidad** | 🔴 Alta |
 | **Resultado esperado** | 204 No Content |
 | **Resultado obtenido** | 204 No Content |
 
@@ -555,6 +594,7 @@ Feature: Gestión de estados
 ```
 | | |
 |---|---|
+| **Severidad** | 🔴 Alta |
 | **Resultado esperado** | 204 No Content |
 | **Resultado obtenido** | 204 No Content |
 
@@ -572,6 +612,7 @@ Feature: Gestión de estados
 ```
 | | |
 |---|---|
+| **Severidad** | 🟢 Baja |
 | **Resultado esperado** | 500 Internal Server Error |
 | **Resultado obtenido** | 500 Internal Server Error |
 
@@ -589,6 +630,7 @@ Feature: Gestión de estados
 ```
 | | |
 |---|---|
+| **Severidad** | 🟢 Baja |
 | **Resultado esperado** | 500 Internal Server Error |
 | **Resultado obtenido** | 500 Internal Server Error |
 
@@ -610,6 +652,7 @@ Feature: Gestión de activos
 ```
 | | |
 |---|---|
+| **Severidad** | 🟡 Media |
 | **Resultado esperado** | 404 Not Found |
 | **Resultado obtenido** | 404 Not Found |
 
@@ -634,6 +677,7 @@ Feature: Gestión de activos
 ```
 | | |
 |---|---|
+| **Severidad** | 🔴 Alta |
 | **Resultado esperado** | 201 Created + objeto creado |
 | **Resultado obtenido** | 201 Created + objeto creado |
 
@@ -651,6 +695,7 @@ Feature: Gestión de activos
 ```
 | | |
 |---|---|
+| **Severidad** | 🟡 Media |
 | **Resultado esperado** | 400 Bad Request |
 | **Resultado obtenido** | 400 Bad Request |
 
@@ -668,6 +713,7 @@ Feature: Gestión de activos
 ```
 | | |
 |---|---|
+| **Severidad** | 🟡 Media |
 | **Resultado esperado** | 400 Bad Request |
 | **Resultado obtenido** | 400 Bad Request |
  
@@ -685,6 +731,7 @@ Feature: Gestión de activos
 ```
 | | |
 |---|---|
+| **Severidad** | 🟡 Media |
 | **Resultado esperado** | 400 Bad Request |
 | **Resultado obtenido** | 400 Bad Request |
 
@@ -702,6 +749,7 @@ Feature: Gestión de activos
 ```
 | | |
 |---|---|
+| **Severidad** | 🟡 Media |
 | **Resultado esperado** | 404 Error: Not Found |
 | **Resultado obtenido** | 404 Error: Not Found |
  
@@ -719,6 +767,7 @@ Feature: Gestión de activos
 ```
 | | |
 |---|---|
+| **Severidad** | 🔴 Alta |
 | **Resultado esperado** | 200 OK + objeto activo |
 | **Resultado obtenido** | 200 OK + objeto activo |
 
@@ -740,6 +789,7 @@ Feature: Gestión de activos
 ```
 | | |
 |---|---|
+| **Severidad** | 🔴 Alta |
 | **Resultado esperado** | 204 No Content |
 | **Resultado obtenido** | 204 No Content |
 
@@ -756,6 +806,7 @@ Feature: Gestión de activos
 ```
 | | |
 |---|---|
+| **Severidad** | 🔴 Alta |
 | **Resultado esperado** | 204 No Content |
 | **Resultado obtenido** | 204 No Content |
 
@@ -772,6 +823,7 @@ Feature: Gestión de activos
 ```
 | | |
 |---|---|
+| **Severidad** | 🟡 Media |
 | **Resultado esperado** | 404 Not Found |
 | **Resultado obtenido** | 404 Not Found |
 
@@ -789,6 +841,7 @@ Feature: Gestión de activos
 ```
 | | |
 |---|---|
+| **Severidad** | 🟢 Baja |
 | **Resultado esperado** | 500 Internal Server Error |
 | **Resultado obtenido** | 500 Internal Server Error |
 
@@ -806,6 +859,7 @@ Feature: Gestión de activos
 ```
 | | |
 |---|---|
+| **Severidad** | 🟢 Baja |
 | **Resultado esperado** | 500 Internal Server Error |
 | **Resultado obtenido** | 500 Internal Server Error |
 
@@ -832,6 +886,7 @@ Feature: Gestión de clientes
 ```
 | | |
 |---|---|
+| **Severidad** | 🔴 Alta |
 | **Resultado esperado** | 201 Created + objeto creado |
 | **Resultado obtenido** | 201 Created + objeto creado |
 
@@ -849,6 +904,7 @@ Feature: Gestión de clientes
 ```
 | | |
 |---|---|
+| **Severidad** | 🟡 Media |
 | **Resultado esperado** | 400 Bad Request |
 | **Resultado obtenido** | 400 Bad Request |
 
@@ -866,6 +922,7 @@ Feature: Gestión de clientes
 ```
 | | |
 |---|---|
+| **Severidad** | 🟡 Media |
 | **Resultado esperado** | 400 Bad Request |
 | **Resultado obtenido** | 400 Bad Request |
 
@@ -883,6 +940,7 @@ Feature: Gestión de clientes
 ```
 | | |
 |---|---|
+| **Severidad** | 🔴 Alta |
 | **Resultado esperado** | 200 OK + lista de clientes |
 | **Resultado obtenido** | 200 OK + lista de clientes |
 
@@ -899,6 +957,7 @@ Feature: Gestión de clientes
 ```
 | | |
 |---|---|
+| **Severidad** | 🔴 Alta |
 | **Resultado esperado** | 204 No Content |
 | **Resultado obtenido** | 204 No Content |
 
@@ -916,6 +975,7 @@ Feature: Gestión de clientes
 ```
 | | |
 |---|---|
+| **Severidad** | 🟢 Baja |
 | **Resultado esperado** | 500 Internal Server Error |
 | **Resultado obtenido** | 500 Internal Server Error |
 
@@ -933,6 +993,7 @@ Feature: Gestión de clientes
 ```
 | | |
 |---|---|
+| **Severidad** | 🟢 Baja |
 | **Resultado esperado** | 500 Internal Server Error |
 | **Resultado obtenido** | 500 Internal Server Error |
 
@@ -954,6 +1015,7 @@ Feature: Gestión de usuarios
 ```
 | | |
 |---|---|
+| **Severidad** | 🟡 Media |
 | **Resultado esperado** | 404 Not Found |
 | **Resultado obtenido** | 404 Not Found |
 
@@ -970,6 +1032,7 @@ Feature: Gestión de usuarios
 ```
 | | |
 |---|---|
+| **Severidad** | 🟡 Media |
 | **Resultado esperado** | 404 Not Found |
 | **Resultado obtenido** | 404 Not Found |
 
@@ -986,6 +1049,7 @@ Feature: Gestión de usuarios
 ```
 | | |
 |---|---|
+| **Severidad** | 🟡 Media |
 | **Resultado esperado** | 404 Not Found |
 | **Resultado obtenido** | 404 Not Found |
 
@@ -1003,6 +1067,7 @@ Feature: Gestión de usuarios
 ```
 | | |
 |---|---|
+| **Severidad** | 🟢 Baja |
 | **Resultado esperado** | 500 Internal Server Error |
 | **Resultado obtenido** | 500 Internal Server Error |
 
@@ -1024,6 +1089,7 @@ Feature: Gestión de alquileres
 ```
 | | |
 |---|---|
+| **Severidad** | 🟡 Media |
 | **Resultado esperado** | 200 OK + lista vacía |
 | **Resultado obtenido** | 200 OK + lista vacía |
 
@@ -1049,6 +1115,7 @@ Feature: Gestión de alquileres
 ```
 | | |
 |---|---|
+| **Severidad** | 🔴 Alta |
 | **Resultado esperado** | 201 Created + objeto alquiler |
 | **Resultado obtenido** | 201 Created + objeto alquiler |
 
@@ -1065,6 +1132,7 @@ Feature: Gestión de alquileres
 ```
 | | |
 |---|---|
+| **Severidad** | 🟡 Media |
 | **Resultado esperado** | 400 Bad Request |
 | **Resultado obtenido** | 400 Bad Request |
 
@@ -1082,6 +1150,7 @@ Feature: Gestión de alquileres
 ```
 | | |
 |---|---|
+| **Severidad** | 🟡 Media |
 | **Resultado esperado** | 404 Not Found |
 | **Resultado obtenido** | 404 Not Found |
  
@@ -1099,6 +1168,7 @@ Feature: Gestión de alquileres
 ```
 | | |
 |---|---|
+| **Severidad** | 🟢 Baja |
 | **Resultado esperado** | 500 Internal Server Error |
 | **Resultado obtenido** | 500 Internal Server Error |
 
@@ -1116,6 +1186,7 @@ Feature: Gestión de alquileres
 ```
 | | |
 |---|---|
+| **Severidad** | 🟢 Baja |
 | **Resultado esperado** | 500 Internal Server Error |
 | **Resultado obtenido** | 500 Internal Server Error |
 
@@ -1202,7 +1273,7 @@ Se ejecutaron nuevamente los casos CP-CAT-07, CP-STA-05 y CP-ASS-08 obteniendo e
 ---
 
 
-## RESUMEN DE CASOS
+## RESUMEN DE CASOS POR CÓDIGO HTTP
  
 | Módulo | Total casos | 200/201 | 204 | 400 | 401 | 404 | 500 |
 |---|---|---|---|---|---|---|---|
@@ -1214,6 +1285,21 @@ Se ejecutaron nuevamente los casos CP-CAT-07, CP-STA-05 y CP-ASS-08 obteniendo e
 | Usuarios | 4 | - | - | - | - | 2 | 1 |
 | Alquileres | 6 | 2 | - | 1 | - | 1 | 2 |
 | **Total** | **58** | **14** | **7** | **12** | **2** | **7** | **13** |
+
+---
+
+## RESUMEN DE CASOS POR SEVERIDAD
+
+| Módulo | Total | 🔴 Alta | 🟡 Media | 🟢 Baja |
+|---|---|---|---|---|
+| Autenticación | 9 | 2 | 5 | 2 |
+| Categorías | 12 | 5 | 5 | 2 |
+| Estados | 8 | 5 | 1 | 2 |
+| Activos | 12 | 5 | 5 | 2 |
+| Clientes | 7 | 3 | 2 | 2 |
+| Usuarios | 4 | - | 3 | 1 |
+| Alquileres | 6 | 1 | 3 | 2 |
+| **Total** | **58** | **21** | **24** | **13** |
  
 ---
  
@@ -1229,3 +1315,4 @@ Se ejecutaron nuevamente los casos CP-CAT-07, CP-STA-05 y CP-ASS-08 obteniendo e
 7. CP-REN-02  → Crear alquiler usando IDs anteriores
 8. Casos de error 400 y 404 por módulo
 9. Casos de error 500 (apagar BD o cambiar contraseña en appsettings.json)
+```
