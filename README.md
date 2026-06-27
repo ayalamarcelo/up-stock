@@ -83,19 +83,19 @@ cp backend/appsettings.json.example backend/appsettings.json
 cp backend/appsettings.Development.json.example backend/appsettings.Development.json
 ```
 
-## Correr proyecto
+## Cómo correr proyecto
 
-Desde raíz:
+Correr backend desde raíz:
 
 ```bash
 dotnet run --project backend
 ```
 
-Para poner en marcha el backend:
+O
 
 1. `cd backend`
-2. `dotnet restore`
-3. `dotnet ef database update`
+2. `dotnet restore` actualiza o instala dependencias
+3. `dotnet ef database update` actualiza bbdd
 4. `dotnet run`
 5. Acceder a la API en: [http://localhost:5102/swagger](http://localhost:5102/swagger)
 
